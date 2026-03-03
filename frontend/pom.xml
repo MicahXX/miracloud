@@ -58,7 +58,7 @@
             <!-- Default configuration for running with: mvn clean javafx:run -->
             <id>default-cli</id>
             <configuration>
-              <mainClass>org.miracloud.frontend/org.miracloud.frontend.HelloApplication</mainClass>
+              <mainClass>org.miracloud.frontend/org.miracloud.frontend.views.signupView</mainClass>
               <launcher>app</launcher>
               <jlinkZipName>app</jlinkZipName>
               <jlinkImageName>app</jlinkImageName>

@@ -6,4 +6,6 @@ module org.miracloud.frontend {
 
     opens org.miracloud.frontend to javafx.fxml;
     exports org.miracloud.frontend;
+    exports org.miracloud.frontend.views;
+    opens org.miracloud.frontend.views to javafx.fxml;
 }

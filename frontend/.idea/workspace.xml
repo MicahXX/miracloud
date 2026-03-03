@@ -5,15 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f0a8b605-c04c-48cc-bbd8-ca6888cf3d62" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/HelloApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/HelloController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/org/miracloud/frontend/hello-view.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/views/signUpView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/Launcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/Launcher.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,9 +30,9 @@
     <commands />
     <urls />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 1
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
   <component name="ProjectId" id="3AQVEznQtvxwPNFwUCxkv072fOa" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -46,6 +42,7 @@
   "keyToString": {
     "Application.HelloApplication.executor": "Run",
     "Application.Launcher.executor": "Run",
+    "Application.signUpView.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -64,12 +61,12 @@
   }
 }]]></component>
   <component name="RunManager" selected="Application.Launcher">
-    <configuration name="HelloApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.miracloud.frontend.HelloApplication" />
+    <configuration name="Launcher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.miracloud.frontend.Launcher" />
       <module name="frontend" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.miracloud.frontend.*" />
+          <option name="PATTERN" value="org.miracloud.frontend.views.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -77,12 +74,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Launcher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.miracloud.frontend.Launcher" />
+    <configuration name="signupView" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.miracloud.frontend.views.signupView" />
       <module name="frontend" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.miracloud.frontend.*" />
+          <option name="PATTERN" value="org.miracloud.frontend.views.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -93,7 +90,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.Launcher" />
-        <item itemvalue="Application.HelloApplication" />
+        <item itemvalue="Application.signupView" />
       </list>
     </recent_temporary>
   </component>
@@ -112,7 +109,9 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1772526017018</updated>
-      <workItem from="1772526018056" duration="2286000" />
+      <workItem from="1772526018056" duration="2389000" />
+      <workItem from="1772532873587" duration="72000" />
+      <workItem from="1772534375839" duration="2028000" />
     </task>
     <servers />
   </component>
