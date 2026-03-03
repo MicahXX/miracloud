@@ -1,0 +1,56 @@
+/* signup.css */
+
+.border-pane {
+    -fx-background-color: #1a1a2e;
+}
+
+.label {
+    -fx-text-fill: #e0e0e0;
+    -fx-font-size: 14px;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-min-width: 130px;
+}
+
+.text-field, .password-field {
+    -fx-background-color: #16213e;
+    -fx-text-fill: #e0e0e0;
+    -fx-border-color: #0f3460;
+    -fx-border-width: 2px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 8px 12px;
+    -fx-font-size: 14px;
+    -fx-min-width: 220px;
+    -fx-prompt-text-fill: #666688;
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #e94560;
+    -fx-effect: dropshadow(gaussian, rgba(233, 69, 96, 0.4), 8, 0, 0, 0);
+}
+
+.button {
+    -fx-background-color: #e94560;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 40px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.button:hover {
+    -fx-background-color: #c73652;
+    -fx-effect: dropshadow(gaussian, rgba(233, 69, 96, 0.5), 10, 0, 0, 0);
+}
+
+.button:pressed {
+    -fx-background-color: #a52d45;
+    -fx-effect: none;
+}
+
+.vbox{
+    -fx-spacing: 20px;
+}
