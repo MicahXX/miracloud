@@ -21,7 +21,7 @@ import java.net.URL;
 
 public class signupView extends Application {
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
 
         /*this goes in the Vertical Box*/
         // user input
@@ -45,7 +45,7 @@ public class signupView extends Application {
         Label label = new Label("");
 
         /*Vertical Box, goes in the center of the screen (the borderpane)*/
-        VBox vBox = new VBox((Node) usernameInput, (Node) emailInput, (Node) passwordInput, signupButton, label);
+        VBox vBox = new VBox(usernameInput, emailInput, passwordInput, signupButton, label);
         vBox.setAlignment(Pos.CENTER);
         vBox.getStyleClass().add("vbox");
 
@@ -60,17 +60,12 @@ public class signupView extends Application {
         } else {
             System.err.println("CSS file not found!");
         }
-        stage.setTitle("ABC");
+        stage.setTitle("miracloud");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.initStyle(StageStyle.UTILITY);
         stage.show();
 
-        signupButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                label.setText("Signed up");
-            }
-        });
+        signupButton.setOnAction(_ -> label.setText("Signed up"));
     }
 }
