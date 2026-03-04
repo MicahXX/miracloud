@@ -1,5 +1,6 @@
 package org.miracloud.frontend.views;
 
+//javafx import
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -15,13 +16,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
-import java.io.IOException;
 import java.net.URL;
 
+import org.miracloud.frontend.controller.signupController;
+
 public class signupView extends Application {
+
     @Override
     public void start(Stage stage) {
+
+        signupController controller = new signupController();
 
         /*this goes in the Vertical Box*/
         // user input
@@ -66,6 +70,10 @@ public class signupView extends Application {
         stage.initStyle(StageStyle.UTILITY);
         stage.show();
 
-        signupButton.setOnAction(_ -> label.setText("Signed up"));
+        signupButton.setOnAction(_ -> controller.handleSignup(
+                emailInputField.getText(),
+                usernameInputField.getText(),
+                passwordInputField.getText()
+        ));
     }
 }

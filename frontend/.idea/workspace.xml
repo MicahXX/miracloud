@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f0a8b605-c04c-48cc-bbd8-ca6888cf3d62" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/controller/signupController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/views/signupView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/views/signupView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,6 +18,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="CSS File" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -53,7 +56,7 @@
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/rafilaos/Documents/GitHub/miracloud/backend",
+    "last_opened_file_path": "/home/rafilaos/Documents/GitHub/miracloud/frontend",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -122,6 +125,7 @@
       <workItem from="1772554499851" duration="1850000" />
       <workItem from="1772607805556" duration="196000" />
       <workItem from="1772609336907" duration="8000" />
+      <workItem from="1772630332896" duration="2182000" />
     </task>
     <servers />
   </component>
