@@ -5,16 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f0a8b605-c04c-48cc-bbd8-ca6888cf3d62" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/AppState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/controller/loginController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/views/loginView.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/org/miracloud/frontend/login.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/org/miracloud/frontend/main.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/Launcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/Launcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/controller/signupController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/controller/signupController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/views/signupView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/views/signupView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/org/miracloud/frontend/signup.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/org/miracloud/frontend/signup.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/views/loginView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/views/loginView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,7 +126,7 @@
       <workItem from="1772609336907" duration="8000" />
       <workItem from="1772630332896" duration="3293000" />
       <workItem from="1772638241706" duration="5851000" />
-      <workItem from="1772651442770" duration="1499000" />
+      <workItem from="1772651442770" duration="1855000" />
     </task>
     <servers />
   </component>

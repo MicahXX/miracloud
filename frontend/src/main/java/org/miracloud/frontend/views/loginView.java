@@ -35,7 +35,7 @@ public class loginView {
         // Button
         Button loginButton = new Button("Login");
         // If you already have an acc, button to signup
-        Label alreadyHaveAnAccLabel = new Label("Already have an account?");
+        Label alreadyHaveAnAccLabel = new Label("Dont have an account?");
         Button toSignup = new Button("Signup");
         HBox alreadyHaveAnAcc = new HBox(alreadyHaveAnAccLabel, toSignup);
         alreadyHaveAnAcc.setAlignment(Pos.CENTER);
