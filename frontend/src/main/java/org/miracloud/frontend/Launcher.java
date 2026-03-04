@@ -1,10 +1,22 @@
 package org.miracloud.frontend;
 
 import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.miracloud.frontend.views.signupView;
 
-public class Launcher {
+public class Launcher extends Application {
+
+    @Override
+    public void start(Stage stage) {
+        stage.setResizable(false);
+        stage.initStyle(StageStyle.UTILITY);
+        stage.setTitle("miracloud");
+        AppState.setStage(stage);
+        new signupView().show();
+    }
+
     public static void main(String[] args) {
-        Application.launch(signupView.class, args);
+        launch(args);
     }
 }

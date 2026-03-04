@@ -1,11 +1,7 @@
 package org.miracloud.frontend.views;
 
 //javafx import
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -13,23 +9,19 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.miracloud.frontend.AppState;
+import org.miracloud.frontend.controller.loginController;
+
 import java.net.URL;
 
-import org.miracloud.frontend.AppState;
-import org.miracloud.frontend.controller.signupController;
 
-public class signupView {
+public class loginView {
 
     public void show() {
         Stage stage = AppState.getStage();
-        signupController controller = new signupController();
+        loginController controller = new loginController();
 
         /*this goes in the Vertical Box*/
-        // user input
-        TextField usernameInputField = new TextField("");
-        Label usernameLabel = new Label("Enter Username:");
-        HBox usernameInput = new HBox(usernameLabel, usernameInputField);
-        usernameInput.setAlignment(Pos.CENTER);
         // email input
         TextField emailInputField = new TextField("");
         Label emailLabel = new Label("Enter Email:");
@@ -41,22 +33,17 @@ public class signupView {
         HBox passwordInput = new HBox(passwordLabel, passwordInputField);
         passwordInput.setAlignment(Pos.CENTER);
         // Button
-        Button signupButton = new Button("Sign Up");
-        // you have to accept privacy policy and cookies with easy checkbox
-        Label privacyPolicyAndCookiesLabel = new Label("By clicking this you agree to our privacy policy and our cookies");
-        CheckBox privacyPolicyAndCookiesCheckbox = new CheckBox();
-        HBox privacyPolicyAndCookiesInput = new HBox(privacyPolicyAndCookiesLabel, privacyPolicyAndCookiesCheckbox);
-        privacyPolicyAndCookiesInput.setAlignment(Pos.CENTER);
-        // If you already have an acc, button to login
+        Button loginButton = new Button("Login");
+        // If you already have an acc, button to signup
         Label alreadyHaveAnAccLabel = new Label("Already have an account?");
-        Button toLogin = new Button("Login");
-        HBox alreadyHaveAnAcc = new HBox(alreadyHaveAnAccLabel, toLogin);
+        Button toSignup = new Button("Signup");
+        HBox alreadyHaveAnAcc = new HBox(alreadyHaveAnAccLabel, toSignup);
         alreadyHaveAnAcc.setAlignment(Pos.CENTER);
         // errors, like didn't fill smth in, acc already exists
         Label errors = new Label("");
 
         /*Vertical Box, goes in the center of the screen (the borderpane)*/
-        VBox vBox = new VBox(usernameInput, emailInput, passwordInput, privacyPolicyAndCookiesInput, signupButton, alreadyHaveAnAcc, errors);
+        VBox vBox = new VBox(emailInput, passwordInput, loginButton, alreadyHaveAnAcc, errors);
         vBox.setAlignment(Pos.CENTER);
         vBox.getStyleClass().add("vbox");
 
@@ -65,6 +52,7 @@ public class signupView {
         borderPane.getStyleClass().add("border-pane");
 
         Scene scene = new Scene(borderPane, 960, 540);
+
         URL cssResource = getClass().getResource("/org/miracloud/frontend/signup.css");
         if (cssResource != null) {
             scene.getStylesheets().add(cssResource.toExternalForm());
@@ -72,13 +60,7 @@ public class signupView {
             System.err.println("CSS file not found!");
         }
 
-        signupButton.setOnAction(_ -> controller.handleSignup(
-                emailInputField.getText(),
-                usernameInputField.getText(),
-                passwordInputField.getText()
-        ));
-
-        toLogin.setOnAction(_ -> controller.toLogin());
+        toSignup.setOnAction(_ -> controller.toSignup());
 
         stage.setScene(scene);
         stage.show();

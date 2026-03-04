@@ -1,6 +1,8 @@
 package org.miracloud.frontend.controller;
 
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
+import org.miracloud.frontend.views.loginView;
 
 public class signupController {
 
@@ -10,5 +12,9 @@ public class signupController {
         // to do
         // hash password here
         // send it as json to backend
+    }
+
+    public void toLogin() {
+        new loginView().show();
     }
 }
