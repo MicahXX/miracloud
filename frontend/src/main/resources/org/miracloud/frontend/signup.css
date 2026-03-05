@@ -55,3 +55,6 @@
     -fx-spacing: 20px;
 }
 
+.privacyCheckbox, .alreadyHaveAnAcc {
+    -fx-padding: 10px;
+}

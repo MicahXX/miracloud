@@ -30,16 +30,19 @@ public class signupView {
         Label usernameLabel = new Label("Enter Username:");
         HBox usernameInput = new HBox(usernameLabel, usernameInputField);
         usernameInput.setAlignment(Pos.CENTER);
+
         // email input
         TextField emailInputField = new TextField("");
         Label emailLabel = new Label("Enter Email:");
         HBox emailInput = new HBox(emailLabel, emailInputField);
         emailInput.setAlignment(Pos.CENTER);
+
         //password input
         PasswordField passwordInputField = new PasswordField();
         Label passwordLabel = new Label("Enter Password:");
         HBox passwordInput = new HBox(passwordLabel, passwordInputField);
         passwordInput.setAlignment(Pos.CENTER);
+
         // Button
         Button signupButton = new Button("Sign Up");
         // you have to accept privacy policy and cookies with easy checkbox
@@ -47,10 +50,13 @@ public class signupView {
         CheckBox privacyPolicyAndCookiesCheckbox = new CheckBox();
         HBox privacyPolicyAndCookiesInput = new HBox(privacyPolicyAndCookiesLabel, privacyPolicyAndCookiesCheckbox);
         privacyPolicyAndCookiesInput.setAlignment(Pos.CENTER);
+        privacyPolicyAndCookiesCheckbox.getStyleClass().add("privacyCheckbox");
+
         // If you already have an acc, button to login
         Label alreadyHaveAnAccLabel = new Label("Already have an account?");
         Button toLogin = new Button("Login");
         HBox alreadyHaveAnAcc = new HBox(alreadyHaveAnAccLabel, toLogin);
+        alreadyHaveAnAccLabel.getStyleClass().add("alreadyHaveAnAcc");
         alreadyHaveAnAcc.setAlignment(Pos.CENTER);
         // errors, like didn't fill smth in, acc already exists
         Label errors = new Label("");
