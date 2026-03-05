@@ -78,11 +78,15 @@ public class signupView {
             System.err.println("CSS file not found!");
         }
 
-        signupButton.setOnAction(_ -> controller.handleSignup(
-                emailInputField.getText(),
-                usernameInputField.getText(),
-                passwordInputField.getText()
-        ));
+        signupButton.setOnAction(_ -> {
+            String returnString = controller.handleSignup(
+                    emailInputField.getText(),
+                    usernameInputField.getText(),
+                    passwordInputField.getText(),
+                    privacyPolicyAndCookiesCheckbox.isSelected()
+            );
+            errors.setText(returnString);
+        });
 
         toLogin.setOnAction(_ -> controller.toLogin());
 
