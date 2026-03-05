@@ -1,7 +1,5 @@
 package org.miracloud.frontend.controller;
 
-import javafx.scene.control.Label;
-import javafx.stage.Stage;
 import org.miracloud.frontend.views.loginView;
 
 public class signupController {
@@ -9,9 +7,9 @@ public class signupController {
     public void handleSignup(String email, String username, String password){
         System.out.println("email: " + email + "\nusername: " + username + "\npassword: " + password);
 
-        // to do
-        // hash password here
-        // send it as json to backend
+        // todo: check if checkbox is checked
+        // todo: hash password here
+        // todo: send it as json to backend
     }
 
     public void toLogin() {
