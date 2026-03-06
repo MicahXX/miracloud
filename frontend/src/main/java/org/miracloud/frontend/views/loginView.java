@@ -53,12 +53,7 @@ public class loginView {
 
         Scene scene = new Scene(borderPane, 960, 540);
 
-        URL cssResource = getClass().getResource("/org/miracloud/frontend/signup.css");
-        if (cssResource != null) {
-            scene.getStylesheets().add(cssResource.toExternalForm());
-        } else {
-            System.err.println("CSS file not found!");
-        }
+        AppState.applyStylesheets(scene, "login.css");
 
         toSignup.setOnAction(_ -> controller.toSignup());
 

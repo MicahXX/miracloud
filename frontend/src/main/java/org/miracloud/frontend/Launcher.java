@@ -16,8 +16,6 @@ public class Launcher extends Application {
         stage.setTitle("miracloud");
         AppState.setStage(stage);
         new signupView().show();
-
-
     }
 
     public static void main(String[] args) {

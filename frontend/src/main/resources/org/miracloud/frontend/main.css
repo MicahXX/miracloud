@@ -1,0 +1,11 @@
+/* colors */
+
+.root {
+    -fx-primary: #3498db;
+    -fx-secondary: #2ecc71;
+    -fx-background: #1a1a2e;
+}
+
+.border-pane {
+    -fx-background-color: -fx-background;
+}
