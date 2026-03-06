@@ -22,7 +22,12 @@ public class signupController {
         if (username.isEmpty()){
             returnString += "username needs to be filled out \n";
         }
-        if(password.isEmpty()){
+        if(!password.isEmpty()){
+            if(password.length() < 8){
+                returnString += "password needs to be at least 8 characters\n";
+            }
+        }
+        else  {
             returnString += "password needs to be filled out \n";
         }
         if(!isChecked){
