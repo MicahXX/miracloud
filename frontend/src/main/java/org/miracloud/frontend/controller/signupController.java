@@ -12,7 +12,7 @@ public class signupController {
         // check if inputs are correct
         if(!email.isEmpty()){
             if(!email.contains("@") && !email.contains(".")){
-                returnString += "please use a valid email";
+                returnString += "please use a valid email\n";
             }
         }
         else{
@@ -30,7 +30,7 @@ public class signupController {
         }
 
         if(returnString.isEmpty()){
-            // todo: hash password here
+            // todo: dont hash the password here, do it in the backend
             // todo: send it as json to backend
             returnString += "signed up";
         }
