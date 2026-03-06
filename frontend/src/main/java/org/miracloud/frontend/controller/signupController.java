@@ -1,6 +1,7 @@
 package org.miracloud.frontend.controller;
 
-import org.miracloud.frontend.views.loginView;
+import javafx.stage.Stage;
+import org.miracloud.frontend.AppState;
 
 public class signupController {
 
@@ -44,6 +45,6 @@ public class signupController {
     }
 
     public void toLogin() {
-        new loginView().show();
+        AppState.navigateTo("login");
     }
 }
