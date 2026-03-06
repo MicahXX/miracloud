@@ -6,14 +6,17 @@ import org.miracloud.frontend.views.signupView;
 
 public class AppState {
     private static Stage stage;
+    private static loginView loginView = new loginView();
+    private static signupView signupView = new signupView();
+
 
     public static void setStage(Stage stage) { AppState.stage = stage; }
     public static Stage getStage() { return stage; }
 
     public static void navigateTo(String view) {
         switch (view) {
-            case "login" -> new loginView().show();
-            case "signup" -> new signupView().show();
+            case "login" -> loginView.show();
+            case "signup" -> signupView.show();
         }
     }
 }

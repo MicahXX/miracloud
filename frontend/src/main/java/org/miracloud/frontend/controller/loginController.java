@@ -6,6 +6,6 @@ import org.miracloud.frontend.views.signupView;
 
 public class loginController {
     public void toSignup() {
-        AppState.navigateTo("login");
+        AppState.navigateTo("signup");
     }
 }

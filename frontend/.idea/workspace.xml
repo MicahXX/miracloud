@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="f0a8b605-c04c-48cc-bbd8-ca6888cf3d62" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/controller/signupController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/controller/signupController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/AppState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/AppState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/controller/loginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/miracloud/frontend/controller/loginController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,6 +142,7 @@
       <workItem from="1772651442770" duration="1855000" />
       <workItem from="1772717518436" duration="1823000" />
       <workItem from="1772727305746" duration="2413000" />
+      <workItem from="1772813609322" duration="45000" />
     </task>
     <servers />
   </component>
