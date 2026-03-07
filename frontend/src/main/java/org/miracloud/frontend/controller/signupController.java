@@ -1,47 +1,46 @@
 package org.miracloud.frontend.controller;
 
-import javafx.stage.Stage;
 import org.miracloud.frontend.AppState;
+
+import java.net.URI;
+import java.net.http.*;
 
 public class signupController {
 
-    public String handleSignup(String email, String username, String password, Boolean isChecked){
-        System.out.println("email: " + email + "\nusername: " + username + "\npassword: " + password + "\nisChecked: " + isChecked);
+    private static final String BASE_URL = "http://localhost:8080/api/auth";
 
-        String returnString = "";
+    public String handleSignup(String email, String username, String password, boolean acceptedPolicy) {
+        if (!acceptedPolicy)
+            return "Please accept the privacy policy";
+        if (username.isBlank() || email.isBlank() || password.isBlank())
+            return "Please fill in all fields";
 
-        // check if inputs are correct
-        if(!email.isEmpty()){
-            if(!email.contains("@") && !email.contains(".")){
-                returnString += "please use a valid email\n";
+        try {
+            String json = String.format(
+                    "{\"username\":\"%s\",\"email\":\"%s\",\"password\":\"%s\"}",
+                    username, email, password
+            );
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(BASE_URL + "/register"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(json))
+                    .build();
+
+            HttpResponse<String> response = client.send(request,
+                    HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                toLogin();
+                return "";
+            } else {
+                return response.body().replace("ERROR: ", "");
             }
-        }
-        else{
-            returnString += "email needs to be filled out \n";
-        }
 
-        if (username.isEmpty()){
-            returnString += "username needs to be filled out \n";
+        } catch (Exception e) {
+            return "Could not connect to server";
         }
-        if(!password.isEmpty()){
-            if(password.length() < 8){
-                returnString += "password needs to be at least 8 characters\n";
-            }
-        }
-        else  {
-            returnString += "password needs to be filled out \n";
-        }
-        if(!isChecked){
-            returnString += "PLEASE ACCEPT OUR PRIVACY POLICY AND COOKIES";
-        }
-
-        if(returnString.isEmpty()){
-            // todo: dont hash the password here, do it in the backend
-            // todo: send it as json to backend
-            returnString += "signed up";
-        }
-
-        return returnString;
     }
 
     public void toLogin() {

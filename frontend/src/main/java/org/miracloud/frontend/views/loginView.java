@@ -1,6 +1,5 @@
 package org.miracloud.frontend.views;
 
-//javafx import
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -8,12 +7,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.miracloud.frontend.AppState;
 import org.miracloud.frontend.controller.loginController;
-
-import java.net.URL;
-
 
 public class loginView {
 
@@ -41,6 +36,14 @@ public class loginView {
         alreadyHaveAnAcc.setAlignment(Pos.CENTER);
         // errors, like didn't fill smth in, acc already exists
         Label errors = new Label("");
+
+        loginButton.setOnAction(_ -> {
+            String result = controller.handleLogin(
+                    emailInputField.getText(),
+                    passwordInputField.getText()
+            );
+            errors.setText(result);
+        });
 
         /*Vertical Box, goes in the center of the screen (the borderpane)*/
         VBox vBox = new VBox(emailInput, passwordInput, loginButton, alreadyHaveAnAcc, errors);
