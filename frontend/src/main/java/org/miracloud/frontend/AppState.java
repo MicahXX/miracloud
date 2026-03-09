@@ -6,6 +6,7 @@ import org.miracloud.frontend.views.loginView;
 import org.miracloud.frontend.views.signupView;
 
 import java.net.URL;
+import java.util.Objects;
 
 public class AppState {
     private static Stage stage;
@@ -25,12 +26,14 @@ public class AppState {
 
     public static void applyStylesheets(Scene scene, String... viewCss) {
         scene.getStylesheets().add(
-                AppState.class.getResource("/org/miracloud/frontend/main.css").toExternalForm()
+                Objects.requireNonNull(AppState.class.getResource("/org/miracloud/frontend/main.css")).toExternalForm()
         );
         for (String css : viewCss) {
-            scene.getStylesheets().add(
-                    AppState.class.getResource("/org/miracloud/frontend/"+css).toExternalForm()
-            );
+            if(!css.isEmpty()) {
+                scene.getStylesheets().add(
+                        Objects.requireNonNull(AppState.class.getResource("/org/miracloud/frontend/" + css)).toExternalForm()
+                );
+            }
         }
     }
 }

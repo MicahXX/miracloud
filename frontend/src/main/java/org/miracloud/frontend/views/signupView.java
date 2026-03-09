@@ -50,13 +50,11 @@ public class signupView {
         CheckBox privacyPolicyAndCookiesCheckbox = new CheckBox();
         HBox privacyPolicyAndCookiesInput = new HBox(privacyPolicyAndCookiesLabel, privacyPolicyAndCookiesCheckbox);
         privacyPolicyAndCookiesInput.setAlignment(Pos.CENTER);
-        privacyPolicyAndCookiesCheckbox.getStyleClass().add("privacyCheckbox");
 
         // If you already have an acc, button to login
         Label alreadyHaveAnAccLabel = new Label("Already have an account?");
         Button toLogin = new Button("Login");
         HBox alreadyHaveAnAcc = new HBox(alreadyHaveAnAccLabel, toLogin);
-        alreadyHaveAnAccLabel.getStyleClass().add("alreadyHaveAnAcc");
         alreadyHaveAnAcc.setAlignment(Pos.CENTER);
         // errors, like didn't fill smth in, acc already exists
         Label errors = new Label("");
@@ -64,11 +62,17 @@ public class signupView {
         /*Vertical Box, goes in the center of the screen (the borderpane)*/
         VBox vBox = new VBox(usernameInput, emailInput, passwordInput, privacyPolicyAndCookiesInput, signupButton, alreadyHaveAnAcc, errors);
         vBox.setAlignment(Pos.CENTER);
-        vBox.getStyleClass().add("vbox");
 
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(vBox);
+
+        /* CSS */
+        privacyPolicyAndCookiesCheckbox.getStyleClass().add("privacyCheckbox");
+        alreadyHaveAnAccLabel.getStyleClass().add("alreadyHaveAnAcLabel");
+        toLogin.getStyleClass().add("toLogin");
         borderPane.getStyleClass().add("border-pane");
+        vBox.getStyleClass().add("vbox");
+
 
         Scene scene = new Scene(borderPane, 960, 540);
 

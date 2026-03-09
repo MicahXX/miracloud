@@ -48,11 +48,16 @@ public class loginView {
         /*Vertical Box, goes in the center of the screen (the borderpane)*/
         VBox vBox = new VBox(emailInput, passwordInput, loginButton, alreadyHaveAnAcc, errors);
         vBox.setAlignment(Pos.CENTER);
-        vBox.getStyleClass().add("vbox");
 
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(vBox);
+
+        /* CSS */
         borderPane.getStyleClass().add("border-pane");
+        vBox.getStyleClass().add("vbox");
+        toSignup.getStyleClass().add("toSignup");
+
+
 
         Scene scene = new Scene(borderPane, 960, 540);
 
