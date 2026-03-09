@@ -37,7 +37,7 @@ public class loginView {
         // errors, like didn't fill smth in, acc already exists
         Label errors = new Label("");
 
-        loginButton.setOnAction(_ -> {
+        loginButton.setOnAction(e -> {
             String result = controller.handleLogin(
                     emailInputField.getText(),
                     passwordInputField.getText()
@@ -63,7 +63,7 @@ public class loginView {
 
         AppState.applyStylesheets(scene, "login.css");
 
-        toSignup.setOnAction(_ -> controller.toSignup());
+        toSignup.setOnAction(e -> controller.toSignup());
 
         stage.setScene(scene);
         stage.show();

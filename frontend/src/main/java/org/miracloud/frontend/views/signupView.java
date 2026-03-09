@@ -78,7 +78,7 @@ public class signupView {
 
         AppState.applyStylesheets(scene, "signup.css");
 
-        signupButton.setOnAction(_ -> {
+        signupButton.setOnAction(e -> {
             String returnString = controller.handleSignup(
                     emailInputField.getText(),
                     usernameInputField.getText(),
@@ -88,7 +88,7 @@ public class signupView {
             errors.setText(returnString);
         });
 
-        toLogin.setOnAction(_ -> controller.toLogin());
+        toLogin.setOnAction(e -> controller.toLogin());
 
         stage.setScene(scene);
         stage.show();
