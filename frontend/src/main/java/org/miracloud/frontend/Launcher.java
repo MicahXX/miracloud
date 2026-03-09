@@ -13,7 +13,7 @@ public class Launcher extends Application {
     public void start(Stage stage) {
         stage.setResizable(false);
         //stage.initStyle(StageStyle.UTILITY);
-        stage.setTitle("miracloud");
+        stage.setTitle("MiraCloud");
         AppState.setStage(stage);
         new signupView().show();
     }

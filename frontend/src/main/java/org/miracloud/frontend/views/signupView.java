@@ -73,7 +73,6 @@ public class signupView {
         borderPane.getStyleClass().add("border-pane");
         vBox.getStyleClass().add("vbox");
 
-
         Scene scene = new Scene(borderPane, 960, 540);
 
         AppState.applyStylesheets(scene, "signup.css");

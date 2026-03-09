@@ -98,7 +98,7 @@
         <artifactId>gluonfx-maven-plugin</artifactId>
         <version>${gluonfx.plugin.version}</version>
         <configuration>
-          <target>android</target> <!-- Change to "ios" for iPhone -->
+          <target>android</target>
           <mainClass>org.miracloud.frontend.Launcher</mainClass>
         </configuration>
       </plugin>
