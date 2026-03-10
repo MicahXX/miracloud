@@ -27,8 +27,9 @@ public class AuthService {
             return "ERROR: Password must be at least 6 characters";
         if (userRepo.existsByEmail(email))
             return "ERROR: Email already registered";
-        if (userRepo.existsByUsername(username))
-            return "ERROR: Username already taken";
+        if (!email.contains("@") || !email.contains(".")) {
+            return "Email is invalid";
+        }
 
         User user = new User();
         user.setUsername(username);
