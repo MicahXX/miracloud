@@ -28,7 +28,7 @@ public class AuthService {
         if (userRepo.existsByEmail(email))
             return "ERROR: Email already registered";
         if (!email.contains("@") || !email.contains(".")) {
-            return "Email is invalid";
+            return "ERROR: Email is invalid";
         }
 
         User user = new User();
