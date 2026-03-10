@@ -7,13 +7,12 @@ import org.miracloud.frontend.views.signupView;
 import org.miracloud.frontend.views.loginView;
 
 
-public class Launcher extends Application {
+public class  Launcher extends Application {
 
     @Override
     public void start(Stage stage) {
         stage.setResizable(false);
-        //stage.initStyle(StageStyle.UTILITY);
-        stage.setTitle("MiraCloud");
+            stage.setTitle("MiraCloud");
         AppState.setStage(stage);
         new signupView().show();
     }

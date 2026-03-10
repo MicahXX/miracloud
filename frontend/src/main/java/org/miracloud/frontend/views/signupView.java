@@ -53,6 +53,7 @@ public class signupView {
         // errors, like didn't fill smth in, acc already exists
         Label errors = new Label("");
 
+
         /*Vertical Box, goes in the center of the screen (the borderpane)*/
         VBox vBox = new VBox(usernameInput, emailInput, passwordInput, privacyPolicyAndCookiesInput, signupButton, alreadyHaveAnAcc, errors);
         vBox.setAlignment(Pos.CENTER);
@@ -60,12 +61,20 @@ public class signupView {
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(vBox);
 
+
         /* CSS */
         privacyPolicyAndCookiesCheckbox.getStyleClass().add("privacyCheckbox");
         alreadyHaveAnAccLabel.getStyleClass().add("alreadyHaveAnAcLabel");
         toLogin.getStyleClass().add("toLogin");
         borderPane.getStyleClass().add("border-pane");
         vBox.getStyleClass().add("vbox");
+        signupButton.getStyleClass().add("signup-button");
+        usernameLabel.getStyleClass().add("input-label");
+        emailLabel.getStyleClass().add("input-label");
+        passwordLabel.getStyleClass().add("input-label");
+        usernameInput.getStyleClass().add("input-row");
+        emailInput.getStyleClass().add("input-row");
+        passwordInput.getStyleClass().add("input-row");
 
         Scene scene = new Scene(borderPane, 960, 540);
 
