@@ -65,9 +65,6 @@ public class loginView {
         emailInput.getStyleClass().add("input-row");
         passwordInput.getStyleClass().add("input-row");
         loginButton.getStyleClass().add("login-button");
-        vBox.prefWidthProperty().bind(scene.widthProperty().multiply(0.5));
-        emailInputField.prefWidthProperty().bind(vBox.widthProperty().multiply(0.5));
-        passwordInputField.prefWidthProperty().bind(vBox.widthProperty().multiply(0.5));
 
         AppState.applyStylesheets(scene, "login.css");
 

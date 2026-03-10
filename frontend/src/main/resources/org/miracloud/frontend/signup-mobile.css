@@ -20,8 +20,8 @@
     -fx-pref-width: 160;
     -fx-max-width: 160;
 
-    -fx-background-color: white;
-    -fx-text-fill: black;
+    -fx-background-color: derive(-fx-background, 5%);  /* dark background */
+    -fx-text-fill: -fx-text;
     -fx-border-color: -fx-text-muted;
     -fx-border-radius: 6;
     -fx-background-radius: 6;
