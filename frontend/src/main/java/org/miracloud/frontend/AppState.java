@@ -2,6 +2,7 @@ package org.miracloud.frontend;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.miracloud.frontend.views.appView;
 import org.miracloud.frontend.views.loginView;
 import org.miracloud.frontend.views.signupView;
 
@@ -13,6 +14,8 @@ public class AppState {
     private static loginView loginView = new loginView();
     private static signupView signupView = new signupView();
 
+    private static  appView appView = new appView();
+
 
     public static void setStage(Stage stage) { AppState.stage = stage; }
     public static Stage getStage() { return stage; }
@@ -21,6 +24,7 @@ public class AppState {
         switch (view) {
             case "login" -> loginView.show();
             case "signup" -> signupView.show();
+            case "app" -> appView.show();
         }
     }
 

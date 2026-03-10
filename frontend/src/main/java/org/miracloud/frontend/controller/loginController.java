@@ -30,7 +30,7 @@ public class loginController {
                     HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == 200) {
-                // TODO: navigate to main app view
+                AppState.navigateTo("app");
                 return "";
             } else {
                 return response.body().replace("ERROR: ", "");

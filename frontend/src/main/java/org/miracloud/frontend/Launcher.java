@@ -17,7 +17,6 @@ public class Launcher extends Application {
         AppState.setStage(stage);
         new signupView().show();
     }
-
     public static void main(String[] args) {
         launch(args);
     }
