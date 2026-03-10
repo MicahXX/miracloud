@@ -12,9 +12,12 @@ public class  Launcher extends Application {
     @Override
     public void start(Stage stage) {
         stage.setResizable(false);
-            stage.setTitle("MiraCloud");
+        stage.setTitle("MiraCloud");
         AppState.setStage(stage);
-        new signupView().show();
+        if (AppState.isMobile()) {
+            stage.setMaximized(true);
+        }
+        AppState.navigateTo("signup");
     }
     public static void main(String[] args) {
         launch(args);

@@ -11,33 +11,54 @@ import java.util.Objects;
 
 public class AppState {
     private static Stage stage;
-    private static loginView loginView = new loginView();
-    private static signupView signupView = new signupView();
-
-    private static  appView appView = new appView();
-
+    private static Scene loginScene;
+    private static Scene signupScene;
+    private static Scene appScene;
 
     public static void setStage(Stage stage) { AppState.stage = stage; }
     public static Stage getStage() { return stage; }
 
     public static void navigateTo(String view) {
         switch (view) {
-            case "login" -> loginView.show();
-            case "signup" -> signupView.show();
-            case "app" -> appView.show();
-        }
-    }
-
-    public static void applyStylesheets(Scene scene, String... viewCss) {
-        scene.getStylesheets().add(
-                Objects.requireNonNull(AppState.class.getResource("/org/miracloud/frontend/main.css")).toExternalForm()
-        );
-        for (String css : viewCss) {
-            if(!css.isEmpty()) {
-                scene.getStylesheets().add(
-                        Objects.requireNonNull(AppState.class.getResource("/org/miracloud/frontend/" + css)).toExternalForm()
-                );
+            case "login" -> {
+                if (loginScene == null) loginScene = new loginView().buildScene();
+                stage.setScene(loginScene);
+            }
+            case "signup" -> {
+                if (signupScene == null) signupScene = new signupView().buildScene();
+                stage.setScene(signupScene);
+            }
+            case "app" -> {
+                if (appScene == null) appScene = new appView().buildScene();
+                stage.setScene(appScene);
             }
         }
+        if (isMobile) stage.setMaximized(true);  // reapply after every scene change
+        stage.show();
+    }
+
+    // AppState.java
+    private static final boolean isMobile = com.gluonhq.attach.util.Platform.isAndroid()
+            || com.gluonhq.attach.util.Platform.isIOS();
+
+    public static boolean isMobile() { return isMobile; }
+
+    public static void applyStylesheets(Scene scene, String desktopCss) {
+        // don't add stylesheets if already applied
+        if (!scene.getStylesheets().isEmpty()) return;
+
+        String viewCss = isMobile ? desktopCss.replace(".css", "-mobile.css") : desktopCss;
+        System.out.println("=== isMobile: " + isMobile + " | css: " + viewCss + " ===");
+
+        scene.getStylesheets().add(
+                Objects.requireNonNull(
+                        AppState.class.getResource("/org/miracloud/frontend/main.css")
+                ).toExternalForm()
+        );
+        scene.getStylesheets().add(
+                Objects.requireNonNull(
+                        AppState.class.getResource("/org/miracloud/frontend/" + viewCss)
+                ).toExternalForm()
+        );
     }
 }

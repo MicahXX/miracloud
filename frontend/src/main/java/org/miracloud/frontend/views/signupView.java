@@ -12,9 +12,13 @@ import javafx.stage.Stage;
 import org.miracloud.frontend.AppState;
 import org.miracloud.frontend.controller.signupController;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 public class signupView {
 
-    public void show() {
+    public Scene buildScene() {
+        try{
         Stage stage = AppState.getStage();
         signupController controller = new signupController();
 
@@ -61,6 +65,7 @@ public class signupView {
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(vBox);
 
+        Scene scene = new Scene(borderPane, 960, 540);
 
         /* CSS */
         privacyPolicyAndCookiesCheckbox.getStyleClass().add("privacyCheckbox");
@@ -76,9 +81,9 @@ public class signupView {
         emailInput.getStyleClass().add("input-row");
         passwordInput.getStyleClass().add("input-row");
 
-        Scene scene = new Scene(borderPane, 960, 540);
 
-        AppState.applyStylesheets(scene, "signup.css");
+        AppState.applyStylesheets(scene, "signup.css");  // AppState picks mobile or desktop
+
 
         signupButton.setOnAction(e -> {
             String returnString = controller.handleSignup(
@@ -92,7 +97,19 @@ public class signupView {
 
         toLogin.setOnAction(e -> controller.toLogin());
 
-        stage.setScene(scene);
-        stage.show();
+        return scene;
+
+        } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+
+            Label errorLabel = new Label(sw.toString());
+            errorLabel.setWrapText(true);
+            ScrollPane scroll = new ScrollPane(errorLabel);
+            Scene scene = new Scene(scroll, 400, 300);
+            AppState.getStage().setScene(scene);
+            AppState.getStage().show();
+            return null;
+        }
     }
 }
