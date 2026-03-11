@@ -11,12 +11,10 @@ public class  Launcher extends Application {
 
     @Override
     public void start(Stage stage) {
-        stage.setResizable(false);
+        stage.setResizable(true);
         stage.setTitle("MiraCloud");
         AppState.setStage(stage);
-        if (AppState.isMobile()) {
-            stage.setMaximized(true);
-        }
+        stage.setMaximized(true);
         AppState.navigateTo("signup");
     }
     public static void main(String[] args) {

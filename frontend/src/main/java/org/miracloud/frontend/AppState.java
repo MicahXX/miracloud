@@ -1,12 +1,12 @@
 package org.miracloud.frontend;
 
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.miracloud.frontend.views.appView;
 import org.miracloud.frontend.views.loginView;
 import org.miracloud.frontend.views.signupView;
 
-import java.net.URL;
 import java.util.Objects;
 
 public class AppState {
@@ -19,6 +19,10 @@ public class AppState {
     public static Stage getStage() { return stage; }
 
     public static void navigateTo(String view) {
+        boolean wasMaximized = stage.isMaximized();
+        double width = stage.getWidth();
+        double height = stage.getHeight();
+
         switch (view) {
             case "login" -> {
                 if (loginScene == null) loginScene = new loginView().buildScene();
@@ -33,8 +37,17 @@ public class AppState {
                 stage.setScene(appScene);
             }
         }
-        if (isMobile) stage.setMaximized(true);  // reapply after every scene change
+
         stage.show();
+
+        Platform.runLater(() -> {
+            if (wasMaximized) {
+                stage.setMaximized(true);
+            } else {
+                stage.setWidth(width);
+                stage.setHeight(height);
+            }
+        });
     }
 
     // AppState.java

@@ -1,11 +1,13 @@
 package org.miracloud.frontend.views;
 
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.miracloud.frontend.AppState;
 import org.miracloud.frontend.controller.loginController;
@@ -54,7 +56,8 @@ public class loginView {
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(vBox);
 
-        Scene scene = new Scene(borderPane, 960, 540);
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+        Scene scene = new Scene(borderPane, bounds.getWidth(), bounds.getHeight());
 
         /* CSS */
         borderPane.getStyleClass().add("border-pane");

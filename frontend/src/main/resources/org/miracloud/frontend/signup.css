@@ -1,5 +1,5 @@
 .border-pane {
-    -fx-padding: 80 300;  /* equal top/bottom so form stays centered */
+    -fx-padding: 40;  /* equal top/bottom so form stays centered */
 }
 
 .vbox {

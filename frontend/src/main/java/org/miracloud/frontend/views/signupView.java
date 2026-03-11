@@ -2,11 +2,13 @@ package org.miracloud.frontend.views;
 
 //javafx import
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import org.miracloud.frontend.AppState;
@@ -44,7 +46,7 @@ public class signupView {
         // Button
         Button signupButton = new Button("Sign Up");
         // you have to accept privacy policy and cookies with easy checkbox
-        Label privacyPolicyAndCookiesLabel = new Label("By clicking this you agree to our privacy policy and our cookies");
+        Label privacyPolicyAndCookiesLabel = new Label("Agree to our privacy policy and our cookies");
         CheckBox privacyPolicyAndCookiesCheckbox = new CheckBox();
         HBox privacyPolicyAndCookiesInput = new HBox(privacyPolicyAndCookiesLabel, privacyPolicyAndCookiesCheckbox);
         privacyPolicyAndCookiesInput.setAlignment(Pos.CENTER);
@@ -65,7 +67,8 @@ public class signupView {
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(vBox);
 
-        Scene scene = new Scene(borderPane, 960, 540);
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+        Scene scene = new Scene(borderPane, bounds.getWidth(), bounds.getHeight());
 
         /* CSS */
         privacyPolicyAndCookiesCheckbox.getStyleClass().add("privacyCheckbox");
