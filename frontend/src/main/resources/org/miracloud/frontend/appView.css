@@ -1,0 +1,155 @@
+.root {
+    -fx-primary: #f43b9e;
+    -fx-secondary: #f472b6;
+    -fx-background: #1c1b2e;
+    -fx-surface: #27263d;
+    -fx-text: #ede9fe;
+    -fx-text-muted: #6b6a8a;
+
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+    -fx-font-size: 13px;
+    -fx-background-color: -fx-background;
+}
+
+.app-header {
+    -fx-padding: 12 20 12 20;
+    -fx-spacing: 12;
+    -fx-alignment: CENTER_LEFT;
+    -fx-background-color: -fx-surface;
+    -fx-border-color: -fx-secondary;
+    -fx-border-width: 0 0 1 0;
+}
+
+.search-field {
+    -fx-pref-width: 320;
+    -fx-background-color: derive(-fx-background, 5%);
+    -fx-text-fill: -fx-text;
+    -fx-prompt-text-fill: -fx-text-muted;
+    -fx-border-color: -fx-text-muted;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 10 8;
+    -fx-font-size: 14;
+}
+
+.search-field:focused {
+    -fx-border-color: -fx-primary;
+}
+
+.app-sidebar {
+    -fx-pref-width: 200;
+    -fx-padding: 24 12 24 12;
+    -fx-spacing: 4;
+    -fx-background-color: -fx-surface;
+    -fx-border-color: -fx-secondary;
+    -fx-border-width: 0 1 0 0;
+}
+
+.app-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-primary;
+    -fx-padding: 0 0 16 4;
+}
+
+.nav-btn {
+    -fx-max-width: infinity;
+    -fx-alignment: CENTER_LEFT;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: -fx-text;
+    -fx-padding: 9 12;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-cursor: hand;
+    -fx-font-size: 13;
+}
+
+.nav-btn:hover {
+    -fx-background-color: derive(-fx-surface, 12%);
+    -fx-text-fill: -fx-secondary;
+}
+
+.nav-btn.nav-active {
+    -fx-background-color: derive(-fx-surface, 8%);
+    -fx-border-color: -fx-primary;
+    -fx-border-width: 0 0 0 2;
+    -fx-text-fill: -fx-primary;
+    -fx-font-weight: bold;
+}
+
+.btn-primary {
+    -fx-background-color: -fx-primary;
+    -fx-text-fill: -fx-background;
+    -fx-padding: 10 24;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-font-size: 13;
+}
+
+.btn-primary:hover {
+    -fx-background-color: -fx-secondary;
+}
+
+.btn-secondary {
+    -fx-background-color: transparent;
+    -fx-border-color: -fx-primary;
+    -fx-border-width: 2;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-text-fill: -fx-primary;
+    -fx-padding: 10 24;
+    -fx-cursor: hand;
+    -fx-font-size: 13;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: -fx-primary;
+    -fx-text-fill: -fx-background;
+}
+
+.app-content {
+    -fx-padding: 20;
+    -fx-background-color: -fx-background;
+}
+
+.file-table {
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 12;
+    -fx-border-color: -fx-secondary;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+}
+
+.file-table .column-header-background {
+    -fx-background-color: derive(-fx-surface, 8%);
+}
+
+.file-table .column-header .label {
+    -fx-text-fill: -fx-text-muted;
+    -fx-font-weight: bold;
+}
+
+.file-table .table-row-cell {
+    -fx-background-color: -fx-surface;
+    -fx-text-fill: -fx-text;
+    -fx-border-color: transparent;
+}
+
+.file-table .table-row-cell:odd {
+    -fx-background-color: derive(-fx-surface, 4%);
+}
+
+.file-table .table-row-cell:hover {
+    -fx-background-color: derive(-fx-surface, 14%);
+}
+
+.file-table .table-row-cell:selected {
+    -fx-background-color: derive(-fx-primary, -40%);
+}
+
+.file-table .placeholder .label {
+    -fx-text-fill: -fx-text-muted;
+}

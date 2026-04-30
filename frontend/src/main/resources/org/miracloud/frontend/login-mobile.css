@@ -1,0 +1,55 @@
+.border-pane {
+    -fx-padding: 16;
+}
+
+.vbox {
+    -fx-max-width: 340;
+    -fx-pref-width: 340;
+
+    -fx-border-width: 2;
+    -fx-border-color: -fx-secondary;
+    -fx-border-radius: 12;
+    -fx-background-color: -fx-surface;
+    -fx-background-radius: 12;
+    -fx-padding: 24 16;
+    -fx-spacing: 20;
+}
+
+.text-field, .password-field {
+    -fx-pref-width: 160;
+    -fx-max-width: 160;
+
+    -fx-background-color: derive(-fx-background, 5%);
+    -fx-text-fill: -fx-text;
+    -fx-border-color: -fx-text-muted;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 10 8;
+    -fx-font-size: 16;
+}
+
+.login-button {
+    -fx-background-color: transparent;
+    -fx-border-color: -fx-primary;
+    -fx-border-width: 2;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-text-fill: -fx-primary;
+    -fx-padding: 12 40;
+    -fx-font-size: 16;
+}
+
+.toSignup {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-text-fill: -fx-primary;
+    -fx-font-size: 16;
+}
+
+.input-label {
+    -fx-pref-width: 130;
+    -fx-min-width: 130;
+    -fx-text-fill: -fx-text;
+    -fx-font-size: 16;
+}
