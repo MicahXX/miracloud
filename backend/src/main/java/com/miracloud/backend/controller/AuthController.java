@@ -29,13 +29,27 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Map<String, String> body) {
-        String result = authService.login(
+    public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> body) {
+        Map<String, String> result = authService.login(
                 body.get("email"),
                 body.get("password")
         );
-        return result.startsWith("ERROR")
+        return result.containsKey("error")
                 ? ResponseEntity.status(401).body(result)
                 : ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<Map<String, String>> refresh(@RequestBody Map<String, String> body) {
+        Map<String, String> result = authService.refresh(body.get("refreshToken"));
+        return result.containsKey("error")
+                ? ResponseEntity.status(401).body(result)
+                : ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestBody Map<String, String> body) {
+        authService.logout(body.get("refreshToken"));
+        return ResponseEntity.ok("Logged out");
     }
 }
