@@ -8,6 +8,7 @@ import org.miracloud.frontend.views.loginView;
 import org.miracloud.frontend.views.signupView;
 
 import java.util.Objects;
+import java.util.prefs.Preferences;
 
 public class AppState {
     private static Stage stage;
@@ -15,6 +16,53 @@ public class AppState {
     private static Scene signupScene;
     private static Scene appScene;
 
+    // Token
+    private static String accessToken = null;
+    private static String refreshToken = null;
+    private static String username = null;
+    private static final Preferences prefs = Preferences.userNodeForPackage(AppState.class);
+
+    public static void saveTokens(String access, String refresh, String user) {
+        accessToken = access;
+        refreshToken = refresh;
+        username = user;
+        prefs.put("accessToken", access);
+        prefs.put("refreshToken", refresh);
+        prefs.put("username", user);
+    }
+
+    public static String getAccessToken() {
+        if (accessToken != null) return accessToken;
+        accessToken = prefs.get("accessToken", null);
+        return accessToken;
+    }
+
+    public static String getRefreshToken() {
+        if (refreshToken != null) return refreshToken;
+        refreshToken = prefs.get("refreshToken", null);
+        return refreshToken;
+    }
+
+    public static String getUsername() {
+        if (username != null) return username;
+        username = prefs.get("username", null);
+        return username;
+    }
+
+    public static void clearTokens() {
+        accessToken = null;
+        refreshToken = null;
+        username = null;
+        prefs.remove("accessToken");
+        prefs.remove("refreshToken");
+        prefs.remove("username");
+    }
+
+    public static boolean hasSession() {
+        return getAccessToken() != null && getRefreshToken() != null;
+    }
+
+    // what view
     public static void setStage(Stage stage) { AppState.stage = stage; }
     public static Stage getStage() { return stage; }
 
@@ -25,7 +73,7 @@ public class AppState {
 
         switch (view) {
             case "login" -> {
-                if (loginScene == null) loginScene = new loginView().buildScene();
+                loginScene = new loginView().buildScene(); // always rebuild login
                 stage.setScene(loginScene);
             }
             case "signup" -> {
@@ -33,7 +81,7 @@ public class AppState {
                 stage.setScene(signupScene);
             }
             case "app" -> {
-                if (appScene == null) appScene = new appView().buildScene();
+                appScene = new appView().buildScene(); // always rebuild app to refresh file list
                 stage.setScene(appScene);
             }
         }
@@ -50,14 +98,13 @@ public class AppState {
         });
     }
 
-    // AppState.java
+    // mobile or desktop
     private static final boolean isMobile = com.gluonhq.attach.util.Platform.isAndroid()
             || com.gluonhq.attach.util.Platform.isIOS();
 
     public static boolean isMobile() { return isMobile; }
 
     public static void applyStylesheets(Scene scene, String desktopCss) {
-        // don't add stylesheets if already applied
         if (!scene.getStylesheets().isEmpty()) return;
 
         String viewCss = isMobile ? desktopCss.replace(".css", "-mobile.css") : desktopCss;
