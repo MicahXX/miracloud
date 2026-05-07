@@ -2,6 +2,7 @@ package org.miracloud.frontend.views;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -12,18 +13,21 @@ import javafx.stage.Stage;
 import org.miracloud.frontend.AppState;
 import org.miracloud.frontend.controller.appController;
 
+import java.awt.Desktop;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class appView {
 
     private final appController fc = new appController();
+    private List<FileEntry> allFiles = new ArrayList<>();
 
     public Scene buildScene() {
         try {
             Stage stage = AppState.getStage();
 
-            // ── Header ───────────────────────────────────────────
+            // SearchField and Upload/New Folder Button
             TextField search = new TextField();
             search.setPromptText("Search files...");
             search.getStyleClass().add("search-field");
@@ -32,24 +36,26 @@ public class appView {
             Button uploadBtn = new Button("Upload");
             uploadBtn.getStyleClass().add("btn-primary");
 
+            // todo: make this button create a folder
             Button newFolderBtn = new Button("New Folder");
             newFolderBtn.getStyleClass().add("btn-secondary");
 
             HBox header = new HBox(search, uploadBtn, newFolderBtn);
             header.getStyleClass().add("app-header");
 
-            // ── Sidebar ──────────────────────────────────────────
+            // Files etc. Sidebar on left
             Label appTitle = new Label("miracloud");
             appTitle.getStyleClass().add("app-title");
 
-            Button navFiles = navButton("Files");
+            Button navFiles  = navButton("Files");
+            // todo: make these do smth
             Button navShared = navButton("Shared");
             Button navRecent = navButton("Recent");
-            Button navTrash = navButton("Trash");
+            Button navTrash  = navButton("Trash");
             navFiles.getStyleClass().add("nav-active");
 
             Button logoutBtn = new Button("Logout");
-            logoutBtn.getStyleClass().add("btn-secondary");
+            logoutBtn.getStyleClass().addAll("btn-secondary", "logout-btn");
 
             Button[] navButtons = {navFiles, navShared, navRecent, navTrash};
             for (Button btn : navButtons) {
@@ -59,35 +65,142 @@ public class appView {
                 });
             }
 
-            VBox nav = new VBox(appTitle, navFiles, navShared, navRecent, navTrash, logoutBtn);
+            Region spacer = new Region();
+            VBox.setVgrow(spacer, Priority.ALWAYS);
+
+            VBox nav = new VBox(appTitle, navFiles, navShared, navRecent, navTrash, spacer, logoutBtn);
             nav.getStyleClass().add("app-sidebar");
 
-            // ── File list ────────────────────────────────────────
-            ListView<String> fileList = new ListView<>();
-            fileList.setPlaceholder(new Label("No files yet..."));
-            fileList.getStyleClass().add("file-table");
-            VBox.setVgrow(fileList, Priority.ALWAYS);
+            // On top thw files table to name the columns
+            Label colName = new Label("Name");
+            colName.getStyleClass().add("col-header");
+            colName.setPrefWidth(350);
 
-            // right-click context menu to delete
+            Label colSize = new Label("Size");
+            colSize.getStyleClass().add("col-header");
+            colSize.setPrefWidth(120);
+
+            Label colDate = new Label("Uploaded");
+            colDate.getStyleClass().add("col-header");
+            colDate.setPrefWidth(200);
+
+            HBox columnHeaders = new HBox(colName, colSize, colDate);
+            columnHeaders.getStyleClass().add("col-header-row");
+            columnHeaders.setSpacing(0);
+
+            // Files
+            ListView<FileEntry> fileList = new ListView<>();
+            fileList.setPlaceholder(new Label("No files yet..."));
+            fileList.getStyleClass().add("file-list");
+            VBox.setVgrow(fileList, Priority.ALWAYS);
+            fileList.setMaxWidth(Double.MAX_VALUE);
+
+            search.textProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal == null || newVal.isBlank()) {
+                    fileList.setItems(FXCollections.observableArrayList(allFiles));
+                } else {
+                    String lower = newVal.toLowerCase();
+                    fileList.setItems(FXCollections.observableArrayList(
+                            allFiles.stream()
+                                    .filter(f -> f.name().toLowerCase().contains(lower))
+                                    .toList()
+                    ));
+                }
+            });
+
+            fileList.setCellFactory(lv -> new ListCell<>() {
+                @Override
+                protected void updateItem(FileEntry item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setGraphic(null);
+                        setText(null);
+                        return;
+                    }
+                    Label icon = new Label(fileIcon(item.name()));
+                    icon.getStyleClass().add("file-icon");
+
+                    Label name = new Label(item.name());
+                    name.getStyleClass().add("file-name");
+                    name.setPrefWidth(300);
+
+                    Label size = new Label(item.formattedSize());
+                    size.getStyleClass().add("file-meta");
+                    size.setPrefWidth(120);
+
+                    Label date = new Label(item.lastModified());
+                    date.getStyleClass().add("file-meta");
+                    date.setPrefWidth(200);
+
+                    HBox row = new HBox(icon, name, size, date);
+                    row.setAlignment(Pos.CENTER_LEFT);
+                    row.setSpacing(10);
+                    row.setMaxWidth(Double.MAX_VALUE);
+                    row.getStyleClass().add("file-row");
+
+                    setGraphic(row);
+                    setText(null);
+                }
+            });
+
+            // Menu that opens when you click on files
             ContextMenu contextMenu = new ContextMenu();
+            MenuItem openItem   = new MenuItem("Open");
+            MenuItem renameItem = new MenuItem("Rename");
             MenuItem deleteItem = new MenuItem("Delete");
-            contextMenu.getItems().add(deleteItem);
+            deleteItem.getStyleClass().add("menu-item-danger");
+
+            contextMenu.getItems().addAll(openItem, renameItem, new SeparatorMenuItem(), deleteItem);
             fileList.setContextMenu(contextMenu);
 
+            // Open
+            openItem.setOnAction(e -> openSelected(fileList));
+            fileList.setOnMouseClicked(e -> {
+                if (e.getClickCount() == 2) openSelected(fileList);
+            });
+
+            // Rename
+            renameItem.setOnAction(e -> {
+                FileEntry selected = fileList.getSelectionModel().getSelectedItem();
+                if (selected == null) return;
+
+                TextInputDialog dialog = new TextInputDialog(selected.name());
+                dialog.setTitle("Rename");
+                dialog.setHeaderText(null);
+                dialog.setContentText("New name:");
+
+                dialog.showAndWait().ifPresent(newName -> {
+                    if (newName.isBlank() || newName.equals(selected.name())) return;
+                    new Thread(() -> {
+                        try {
+                            fc.renameFile(selected.name(), newName);
+                            List<FileEntry> files = fc.listFiles();
+                            Platform.runLater(() -> updateList(files, fileList, search));
+                        } catch (Exception ex) {
+                            Platform.runLater(() -> showAlert("Rename failed", ex.getMessage()));
+                        }
+                    }).start();
+                });
+            });
+
+            // Delete
             deleteItem.setOnAction(e -> {
-                String selected = fileList.getSelectionModel().getSelectedItem();
+                FileEntry selected = fileList.getSelectionModel().getSelectedItem();
                 if (selected == null) return;
                 new Thread(() -> {
                     try {
-                        fc.deleteFile(selected);
-                        Platform.runLater(() -> fileList.getItems().remove(selected));
+                        fc.deleteFile(selected.name());
+                        Platform.runLater(() -> {
+                            allFiles.remove(selected);
+                            fileList.getItems().remove(selected);
+                        });
                     } catch (Exception ex) {
                         Platform.runLater(() -> showAlert("Delete failed", ex.getMessage()));
                     }
                 }).start();
             });
 
-            // ── Upload ───────────────────────────────────────────
+            // Upload
             uploadBtn.setOnAction(e -> {
                 FileChooser chooser = new FileChooser();
                 chooser.setTitle("Choose file to upload");
@@ -97,16 +210,15 @@ public class appView {
                 new Thread(() -> {
                     try {
                         fc.uploadFile(file.toPath());
-                        List<String> files = fc.listFiles();
-                        Platform.runLater(() ->
-                                fileList.setItems(FXCollections.observableArrayList(files)));
+                        List<FileEntry> files = fc.listFiles();
+                        Platform.runLater(() -> updateList(files, fileList, search));
                     } catch (Exception ex) {
                         Platform.runLater(() -> showAlert("Upload failed", ex.getMessage()));
                     }
                 }).start();
             });
 
-            // ── Logout ───────────────────────────────────────────
+            // Logout
             logoutBtn.setOnAction(e -> new Thread(() -> {
                 try {
                     fc.logout();
@@ -116,21 +228,28 @@ public class appView {
                 Platform.runLater(() -> AppState.navigateTo("login"));
             }).start());
 
-            // ── Load files on open ───────────────────────────────
+            // Load files on open
             new Thread(() -> {
                 try {
-                    List<String> files = fc.listFiles();
-                    Platform.runLater(() ->
-                            fileList.setItems(FXCollections.observableArrayList(files)));
+                    List<FileEntry> files = fc.listFiles();
+                    Platform.runLater(() -> updateList(files, fileList, search));
                 } catch (Exception ex) {
                     Platform.runLater(() -> showAlert("Error loading files", ex.getMessage()));
                 }
             }).start();
 
-            // ── Layout ───────────────────────────────────────────
-            VBox content = new VBox(fileList);
+            Label contentHeader = new Label("My Files");
+            contentHeader.getStyleClass().add("content-header");
+
+            VBox listContainer = new VBox(columnHeaders, fileList);
+            listContainer.getStyleClass().add("list-container");
             VBox.setVgrow(fileList, Priority.ALWAYS);
+
+            VBox content = new VBox(contentHeader, listContainer);
             content.getStyleClass().add("app-content");
+            VBox.setVgrow(listContainer, Priority.ALWAYS);
+            listContainer.setMaxWidth(Double.MAX_VALUE);
+            listContainer.setMaxHeight(Double.MAX_VALUE);
 
             BorderPane borderPane = new BorderPane();
             borderPane.setTop(header);
@@ -149,6 +268,54 @@ public class appView {
             AppState.getStage().show();
             return null;
         }
+    }
+
+    private void updateList(List<FileEntry> files, ListView<FileEntry> fileList, TextField search) {
+        allFiles = new ArrayList<>(files);
+        String q = search.getText();
+        if (q != null && !q.isBlank()) {
+            String lower = q.toLowerCase();
+            fileList.setItems(FXCollections.observableArrayList(
+                    allFiles.stream().filter(f -> f.name().toLowerCase().contains(lower)).toList()
+            ));
+        } else {
+            fileList.setItems(FXCollections.observableArrayList(allFiles));
+        }
+    }
+
+    private void openSelected(ListView<FileEntry> fileList) {
+        FileEntry selected = fileList.getSelectionModel().getSelectedItem();
+        if (selected == null) return;
+        new Thread(() -> {
+            try {
+                File localFile = fc.downloadToTemp(selected.name());
+                Desktop.getDesktop().open(localFile);
+            } catch (Exception ex) {
+                Platform.runLater(() -> showAlert("Could not open file", ex.getMessage()));
+            }
+        }).start();
+    }
+
+    private String fileIcon(String name) {
+        String lower = name.toLowerCase();
+        if (lower.endsWith(".pdf"))  return "📄";
+        if (lower.endsWith(".png")  || lower.endsWith(".jpg")
+                || lower.endsWith(".jpeg") || lower.endsWith(".gif")
+                || lower.endsWith(".webp")) return "🖼";
+        if (lower.endsWith(".zip")  || lower.endsWith(".rar")
+                || lower.endsWith(".7z")   || lower.endsWith(".tar")
+                || lower.endsWith(".gz"))   return "📦";
+        if (lower.endsWith(".mp4")  || lower.endsWith(".mov")
+                || lower.endsWith(".avi")  || lower.endsWith(".mkv")) return "🎬";
+        if (lower.endsWith(".mp3")  || lower.endsWith(".wav")
+                || lower.endsWith(".flac")) return "🎵";
+        if (lower.endsWith(".html") || lower.endsWith(".css")
+                || lower.endsWith(".js")   || lower.endsWith(".java")
+                || lower.endsWith(".py")   || lower.endsWith(".ts"))  return "💻";
+        if (lower.endsWith(".txt")  || lower.endsWith(".md"))  return "📝";
+        if (lower.endsWith(".xlsx") || lower.endsWith(".csv")) return "📊";
+        if (lower.endsWith(".docx") || lower.endsWith(".doc")) return "📃";
+        return "📁";
     }
 
     private Button navButton(String text) {

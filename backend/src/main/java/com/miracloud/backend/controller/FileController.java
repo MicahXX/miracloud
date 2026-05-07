@@ -1,5 +1,6 @@
 package com.miracloud.backend.controller;
 
+import com.miracloud.backend.dto.FileInfoDTO;
 import com.miracloud.backend.model.User;
 import com.miracloud.backend.service.FileStorageService;
 import org.springframework.core.io.Resource;
@@ -23,13 +24,28 @@ public class FileController {
     }
 
     @GetMapping
-    public ResponseEntity<List<String>> listFiles(@AuthenticationPrincipal User user) {
+    public ResponseEntity<List<FileInfoDTO>> listFiles(@AuthenticationPrincipal User user) {
         try {
-            return ResponseEntity.ok(fileStorageService.listFiles(user.getId()));
+            return ResponseEntity.ok(fileStorageService.listFilesWithInfo(user.getId()));
         } catch (IOException e) {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    // Add this new endpoint:
+    @PutMapping("/{filename}/rename")
+    public ResponseEntity<String> rename(@AuthenticationPrincipal User user,
+                                         @PathVariable String filename,
+                                         @RequestBody RenameRequest body) {
+        try {
+            fileStorageService.rename(user.getId(), filename, body.newName());
+            return ResponseEntity.ok("Renamed to: " + body.newName());
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().body("Rename failed: " + e.getMessage());
+        }
+    }
+
+    public record RenameRequest(String newName) {}
 
     @PostMapping("/upload")
     public ResponseEntity<String> upload(@AuthenticationPrincipal User user,

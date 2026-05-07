@@ -1,27 +1,39 @@
 package org.miracloud.frontend.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.miracloud.frontend.AppState;
+import org.miracloud.frontend.views.FileEntry;
 
+import java.io.File;
 import java.net.URI;
 import java.net.http.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class appController {
 
     private static final String BASE_URL = "http://localhost:8080/api/files";
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    public List<String> listFiles() throws Exception {
+    public List<FileEntry> listFiles() throws Exception {
         HttpResponse<String> response = authorizedGet(BASE_URL);
-        if (response.statusCode() == 200)
-            return mapper.readValue(response.body(), List.class);
         if (response.statusCode() == 401 && loginController.tryAutoLogin())
-            return listFiles(); // retry once after token refresh
-        throw new Exception("Failed to load files");
+            return listFiles();
+        if (response.statusCode() != 200)
+            throw new Exception("Failed to load files");
+
+        JsonNode root = mapper.readTree(response.body());
+        List<FileEntry> entries = new ArrayList<>();
+        for (JsonNode node : root) {
+            String name = node.has("name") ? node.get("name").asText() : node.asText();
+            long size = node.has("sizeBytes") ? node.get("sizeBytes").asLong() : 0L;
+            String date = node.has("uploadedAt") ? node.get("uploadedAt").asText() : "—";
+            entries.add(new FileEntry(name, size, date));
+        }
+        return entries;
     }
 
     public void uploadFile(Path filePath) throws Exception {
@@ -48,24 +60,51 @@ public class appController {
                 .POST(HttpRequest.BodyPublishers.ofByteArray(fullBody))
                 .build();
 
-        HttpResponse<String> response = client.send(request,
-                HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() != 200)
             throw new Exception("Upload failed: " + response.body());
     }
 
     public void deleteFile(String filename) throws Exception {
+        String encoded = java.net.URLEncoder.encode(filename, "UTF-8").replace("+", "%20");
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + "/" + filename))
+                .uri(URI.create(BASE_URL + "/" + encoded))
                 .header("Authorization", "Bearer " + AppState.getAccessToken())
                 .DELETE()
                 .build();
 
-        HttpResponse<String> response = client.send(request,
-                HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() != 200)
             throw new Exception("Delete failed: " + response.body());
+    }
+
+    public void renameFile(String oldName, String newName) throws Exception {
+        String encoded = java.net.URLEncoder.encode(oldName, "UTF-8").replace("+", "%20");
+        String json = String.format("{\"newName\":\"%s\"}", newName);
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/" + encoded + "/rename"))
+                .header("Authorization", "Bearer " + AppState.getAccessToken())
+                .header("Content-Type", "application/json")
+                .PUT(HttpRequest.BodyPublishers.ofString(json))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() != 200)
+            throw new Exception("Rename failed: " + response.body());
+    }
+
+    public File downloadToTemp(String filename) throws Exception {
+        String encoded = java.net.URLEncoder.encode(filename, "UTF-8").replace("+", "%20");
+        HttpResponse<byte[]> response = authorizedGetBytes(BASE_URL + "/download/" + encoded);
+        if (response.statusCode() != 200)
+            throw new Exception("Download failed: " + response.statusCode());
+
+        Path tmp = Files.createTempFile("miracloud_", "_" + filename);
+        Files.write(tmp, response.body());
+        tmp.toFile().deleteOnExit();
+        return tmp.toFile();
     }
 
     public void logout() throws Exception {
@@ -91,5 +130,15 @@ public class appController {
                 .GET()
                 .build();
         return client.send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
+    private HttpResponse<byte[]> authorizedGetBytes(String url) throws Exception {
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Authorization", "Bearer " + AppState.getAccessToken())
+                .GET()
+                .build();
+        return client.send(request, HttpResponse.BodyHandlers.ofByteArray());
     }
 }

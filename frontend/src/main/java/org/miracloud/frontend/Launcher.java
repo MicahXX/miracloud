@@ -15,8 +15,15 @@ public class  Launcher extends Application {
         stage.setTitle("MiraCloud");
         AppState.setStage(stage);
         stage.setMaximized(true);
-        AppState.navigateTo("signup");
+
+        // check to see if user is already logged in
+        if (AppState.hasSession() && org.miracloud.frontend.controller.loginController.tryAutoLogin()) {
+            AppState.navigateTo("app");
+        } else {
+            AppState.navigateTo("login");
+        }
     }
+
     public static void main(String[] args) {
         launch(args);
     }
