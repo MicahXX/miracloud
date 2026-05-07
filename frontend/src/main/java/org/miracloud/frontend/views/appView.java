@@ -238,14 +238,11 @@ public class appView {
                 }
             }).start();
 
-            Label contentHeader = new Label("My Files");
-            contentHeader.getStyleClass().add("content-header");
-
             VBox listContainer = new VBox(columnHeaders, fileList);
             listContainer.getStyleClass().add("list-container");
             VBox.setVgrow(fileList, Priority.ALWAYS);
 
-            VBox content = new VBox(contentHeader, listContainer);
+            VBox content = new VBox(listContainer);
             content.getStyleClass().add("app-content");
             VBox.setVgrow(listContainer, Priority.ALWAYS);
             listContainer.setMaxWidth(Double.MAX_VALUE);
