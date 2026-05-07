@@ -24,34 +24,23 @@ public class FileController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FileInfoDTO>> listFiles(@AuthenticationPrincipal User user) {
+    public ResponseEntity<List<FileInfoDTO>> listFiles(
+            @AuthenticationPrincipal User user,
+            @RequestParam(required = false) String path) {
         try {
-            return ResponseEntity.ok(fileStorageService.listFilesWithInfo(user.getId()));
+            return ResponseEntity.ok(fileStorageService.listFilesWithInfo(user.getId(), path));
         } catch (IOException e) {
             return ResponseEntity.internalServerError().build();
         }
     }
 
-    // Add this new endpoint:
-    @PutMapping("/{filename}/rename")
-    public ResponseEntity<String> rename(@AuthenticationPrincipal User user,
-                                         @PathVariable String filename,
-                                         @RequestBody RenameRequest body) {
-        try {
-            fileStorageService.rename(user.getId(), filename, body.newName());
-            return ResponseEntity.ok("Renamed to: " + body.newName());
-        } catch (IOException e) {
-            return ResponseEntity.internalServerError().body("Rename failed: " + e.getMessage());
-        }
-    }
-
-    public record RenameRequest(String newName) {}
-
     @PostMapping("/upload")
-    public ResponseEntity<String> upload(@AuthenticationPrincipal User user,
-                                         @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> upload(
+            @AuthenticationPrincipal User user,
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(required = false) String path) {
         try {
-            fileStorageService.store(user.getId(), file);
+            fileStorageService.store(user.getId(), file, path);
             return ResponseEntity.ok("Uploaded: " + file.getOriginalFilename());
         } catch (IOException e) {
             return ResponseEntity.internalServerError().body("Upload failed: " + e.getMessage());
@@ -59,8 +48,9 @@ public class FileController {
     }
 
     @GetMapping("/download/{filename}")
-    public ResponseEntity<Resource> download(@AuthenticationPrincipal User user,
-                                             @PathVariable String filename) {
+    public ResponseEntity<Resource> download(
+            @AuthenticationPrincipal User user,
+            @PathVariable String filename) {
         try {
             Resource resource = fileStorageService.loadAsResource(user.getId(), filename);
             return ResponseEntity.ok()
@@ -73,8 +63,9 @@ public class FileController {
     }
 
     @DeleteMapping("/{filename}")
-    public ResponseEntity<String> delete(@AuthenticationPrincipal User user,
-                                         @PathVariable String filename) {
+    public ResponseEntity<String> delete(
+            @AuthenticationPrincipal User user,
+            @PathVariable String filename) {
         try {
             fileStorageService.delete(user.getId(), filename);
             return ResponseEntity.ok("Deleted: " + filename);
@@ -82,4 +73,46 @@ public class FileController {
             return ResponseEntity.internalServerError().body("Delete failed: " + e.getMessage());
         }
     }
+
+    @PutMapping("/{filename}/rename")
+    public ResponseEntity<String> rename(
+            @AuthenticationPrincipal User user,
+            @PathVariable String filename,
+            @RequestBody RenameRequest body) {
+        try {
+            fileStorageService.rename(user.getId(), filename, body.newName());
+            return ResponseEntity.ok("Renamed to: " + body.newName());
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().body("Rename failed: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/{filename}/move")
+    public ResponseEntity<String> move(
+            @AuthenticationPrincipal User user,
+            @PathVariable String filename,
+            @RequestBody MoveRequest body) {
+        try {
+            fileStorageService.move(user.getId(), filename, body.targetFolder());
+            return ResponseEntity.ok("Moved");
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().body("Move failed: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/folder")
+    public ResponseEntity<String> createFolder(
+            @AuthenticationPrincipal User user,
+            @RequestBody FolderRequest body) {
+        try {
+            fileStorageService.createFolder(user.getId(), body.name());
+            return ResponseEntity.ok("Created: " + body.name());
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().body("Failed: " + e.getMessage());
+        }
+    }
+
+    public record RenameRequest(String newName) {}
+    public record MoveRequest(String targetFolder) {}
+    public record FolderRequest(String name) {}
 }

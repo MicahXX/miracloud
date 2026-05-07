@@ -20,7 +20,7 @@ public class  Launcher extends Application {
         if (AppState.hasSession() && org.miracloud.frontend.controller.loginController.tryAutoLogin()) {
             AppState.navigateTo("app");
         } else {
-            AppState.navigateTo("login");
+            AppState.navigateTo("signup");
         }
     }
 

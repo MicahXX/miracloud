@@ -1,4 +1,5 @@
 package com.miracloud.backend.dto;
 
-// holds the data for the files
-public record FileInfoDTO(String name, long sizeBytes, String uploadedAt) {}
+public record FileInfoDTO(String name, long sizeBytes, String uploadedAt) {
+    public boolean isFolder() { return sizeBytes == -1L; }
+}

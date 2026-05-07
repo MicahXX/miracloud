@@ -140,7 +140,7 @@
 }
 
 .col-header-row {
-    -fx-padding: 9 14 9 14;
+    -fx-padding: 9 14 9 46;
     -fx-background-color: derive(-fx-surface, 8%);
     -fx-background-radius: 8 8 0 0;
     -fx-border-color: transparent transparent rgba(244, 114, 182, 0.2) transparent;
@@ -164,6 +164,11 @@
     -fx-faint-focus-color: transparent;
 }
 
+.file-list:focused {
+    -fx-background-color: -fx-surface;
+    -fx-border-color: transparent;
+}
+
 .file-list .scroll-bar:horizontal {
     -fx-pref-height: 0;
     -fx-opacity: 0;
@@ -172,11 +177,6 @@
 .file-list .scroll-bar:horizontal .thumb {
     -fx-pref-height: 0;
     -fx-opacity: 0;
-}
-
-.file-list:focused {
-    -fx-background-color: -fx-surface;
-    -fx-border-color: transparent;
 }
 
 .file-list .virtual-flow,
@@ -202,16 +202,6 @@
 
 .file-list .list-cell:hover {
     -fx-background-color: derive(-fx-surface, 14%);
-    -fx-text-fill: -fx-text;
-}
-
-.file-list .list-cell:selected {
-    -fx-background-color: derive(-fx-primary, -50%);
-    -fx-text-fill: -fx-text;
-}
-
-.file-list .list-cell:selected:focused {
-    -fx-background-color: derive(-fx-primary, -45%);
     -fx-text-fill: -fx-text;
 }
 
@@ -291,4 +281,60 @@
 
 .menu-item-danger:focused {
     -fx-background-color: rgba(248, 113, 113, 0.15);
+}
+
+.back-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: -fx-text-muted;
+    -fx-font-size: 13;
+    -fx-cursor: hand;
+    -fx-padding: 4 8;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+}
+
+.back-btn:hover {
+    -fx-text-fill: -fx-primary;
+    -fx-background-color: transparent;
+}
+
+.breadcrumb {
+    -fx-padding: 0 0 4 0;
+}
+
+.crumb-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: -fx-text-muted;
+    -fx-font-size: 13;
+    -fx-cursor: hand;
+    -fx-padding: 2 4;
+    -fx-background-radius: 4;
+}
+
+.crumb-btn:hover {
+    -fx-text-fill: -fx-primary;
+    -fx-background-color: transparent;
+}
+
+.crumb-sep {
+    -fx-text-fill: -fx-text-muted;
+    -fx-font-size: 13;
+    -fx-padding: 0 2;
+}
+
+.crumb-current {
+    -fx-text-fill: -fx-text;
+    -fx-font-size: 13;
+    -fx-font-weight: bold;
+    -fx-padding: 2 4;
+}
+
+.file-list .list-cell:selected,
+.file-list .list-cell:selected:focused,
+.file-list .list-cell:filled:selected,
+.file-list .list-cell:filled:selected:focused {
+    -fx-background-color: rgba(244, 59, 158, 0.28) !important;
+    -fx-text-fill: -fx-text !important;
 }
