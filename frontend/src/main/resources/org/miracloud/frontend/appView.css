@@ -1,10 +1,4 @@
 .root {
-    -fx-primary: #f43b9e;
-    -fx-secondary: #f472b6;
-    -fx-background: #1c1b2e;
-    -fx-surface: #27263d;
-    -fx-text: #ede9fe;
-    -fx-text-muted: #6b6a8a;
     -fx-font-family: "Segoe UI", "Inter", sans-serif;
     -fx-font-size: 13px;
     -fx-background-color: -fx-background;
@@ -72,7 +66,7 @@
 }
 
 .nav-btn.nav-active {
-    -fx-background-color: rgba(244, 59, 158, 0.1);
+    -fx-background-color: rgba(14, 165, 233, 0.1);
     -fx-border-color: -fx-primary;
     -fx-border-width: 0 0 0 2;
     -fx-background-radius: 0 6 6 0;
@@ -143,7 +137,7 @@
     -fx-padding: 9 14 9 46;
     -fx-background-color: derive(-fx-surface, 8%);
     -fx-background-radius: 8 8 0 0;
-    -fx-border-color: transparent transparent rgba(244, 114, 182, 0.2) transparent;
+    -fx-border-color: transparent transparent rgba(56, 189, 248, 0.2) transparent;
     -fx-border-width: 0 0 1 0;
     -fx-max-width: infinity;
 }
@@ -191,7 +185,7 @@
     -fx-background-color: -fx-surface;
     -fx-text-fill: -fx-text;
     -fx-padding: 10 14;
-    -fx-border-color: transparent transparent rgba(244, 114, 182, 0.12) transparent;
+    -fx-border-color: transparent transparent rgba(56, 189, 248, 0.12) transparent;
     -fx-border-width: 0 0 1 0;
     -fx-font-size: 13;
 }
@@ -335,6 +329,6 @@
 .file-list .list-cell:selected:focused,
 .file-list .list-cell:filled:selected,
 .file-list .list-cell:filled:selected:focused {
-    -fx-background-color: rgba(244, 59, 158, 0.28) !important;
+    -fx-background-color: rgba(14, 165, 233, 0.28) !important;
     -fx-text-fill: -fx-text !important;
 }
