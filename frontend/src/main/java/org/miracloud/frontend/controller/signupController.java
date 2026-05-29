@@ -7,7 +7,7 @@ import java.net.http.*;
 
 public class signupController {
 
-    private static final String BASE_URL = "http://localhost:8080/api/auth";
+    private static final String BASE_URL = "https://miracloud.rafilaos.vip/api/auth";
 
     public String handleSignup(String email, String username, String password, boolean acceptedPolicy) {
         if (!acceptedPolicy)

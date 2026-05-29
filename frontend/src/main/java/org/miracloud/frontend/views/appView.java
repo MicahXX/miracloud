@@ -261,17 +261,45 @@ public class appView {
             // Menu
             ContextMenu contextMenu = new ContextMenu();
             MenuItem openItem   = new MenuItem("Open");
+            MenuItem downloadItem   = new MenuItem("Download");
+
             MenuItem renameItem = new MenuItem("Rename");
             MenuItem deleteItem = new MenuItem("Delete");
             deleteItem.getStyleClass().add("menu-item-danger");
 
-            contextMenu.getItems().addAll(openItem, renameItem, new SeparatorMenuItem(), deleteItem);
+            contextMenu.getItems().addAll(openItem, downloadItem, renameItem, new SeparatorMenuItem(), deleteItem);
             fileList.setContextMenu(contextMenu);
 
             // Open
             openItem.setOnAction(e -> openSelected(fileList, breadcrumb, search));
             fileList.setOnMouseClicked(e -> {
                 if (e.getClickCount() == 2) openSelected(fileList, breadcrumb, search);
+            });
+
+            // Download
+            downloadItem.setOnAction(e -> {
+                FileEntry sel = fileList.getSelectionModel().getSelectedItem();
+                if (sel == null || sel.isFolder()) return;
+
+                FileChooser saveChooser = new FileChooser();
+                saveChooser.setTitle("Save file as");
+                saveChooser.setInitialFileName(sel.name());
+                File dest = saveChooser.showSaveDialog(stage);
+                if (dest == null) return;
+
+                new Thread(() -> {
+                    try {
+                        String fullPath = currentPath.isEmpty() ? sel.name() : currentPath + "/" + sel.name();
+                        File tmp = fc.downloadToTemp(fullPath);
+                        java.nio.file.Files.copy(
+                                tmp.toPath(),
+                                dest.toPath(),
+                                java.nio.file.StandardCopyOption.REPLACE_EXISTING
+                        );
+                    } catch (Exception ex) {
+                        Platform.runLater(() -> showAlert("Download failed", ex.getMessage()));
+                    }
+                }).start();
             });
 
             // Rename
@@ -469,7 +497,8 @@ public class appView {
         // open file
         new Thread(() -> {
             try {
-                File localFile = fc.downloadToTemp(selected.name());
+                String fullPath = currentPath.isEmpty() ? selected.name() : currentPath + "/" + selected.name();
+                File localFile = fc.downloadToTemp(fullPath);
                 Desktop.getDesktop().open(localFile);
             } catch (Exception ex) {
                 Platform.runLater(() -> showAlert("Could not open file", ex.getMessage()));

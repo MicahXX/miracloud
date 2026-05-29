@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class loginController {
 
-    private static final String BASE_URL = "http://localhost:8080/api/auth";
+    private static final String BASE_URL = "https://miracloud.rafilaos.vip/api/auth";
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public String handleLogin(String email, String password) {
