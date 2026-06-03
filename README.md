@@ -6,4 +6,3 @@
 
 ## Backend
 - Needs jdk 25+ because of Springboot
-

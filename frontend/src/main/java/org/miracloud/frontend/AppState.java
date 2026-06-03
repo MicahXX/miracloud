@@ -1,8 +1,15 @@
 package org.miracloud.frontend;
 
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.miracloud.frontend.views.appView;
 import org.miracloud.frontend.views.loginView;
 import org.miracloud.frontend.views.signupView;
@@ -11,114 +18,152 @@ import java.util.Objects;
 import java.util.prefs.Preferences;
 
 public class AppState {
-    private static Stage stage;
-    private static Scene loginScene;
-    private static Scene signupScene;
-    private static Scene appScene;
 
-    // Token
+    private static Stage stage;
+    private static final Preferences prefs = Preferences.userNodeForPackage(AppState.class);
+
     private static String accessToken = null;
     private static String refreshToken = null;
     private static String username = null;
-    private static final Preferences prefs = Preferences.userNodeForPackage(AppState.class);
 
     public static void saveTokens(String access, String refresh, String user) {
-        accessToken = access;
-        refreshToken = refresh;
-        username = user;
-        prefs.put("accessToken", access);
-        prefs.put("refreshToken", refresh);
-        prefs.put("username", user);
+        accessToken = access; refreshToken = refresh; username = user;
+        prefs.put("accessToken", access); prefs.put("refreshToken", refresh); prefs.put("username", user);
     }
-
-    public static String getAccessToken() {
-        if (accessToken != null) return accessToken;
-        accessToken = prefs.get("accessToken", null);
-        return accessToken;
-    }
-
-    public static String getRefreshToken() {
-        if (refreshToken != null) return refreshToken;
-        refreshToken = prefs.get("refreshToken", null);
-        return refreshToken;
-    }
-
-    public static String getUsername() {
-        if (username != null) return username;
-        username = prefs.get("username", null);
-        return username;
-    }
-
+    public static String getAccessToken() { return accessToken != null ? accessToken : (accessToken = prefs.get("accessToken", null)); }
+    public static String getRefreshToken() { return refreshToken != null ? refreshToken : (refreshToken = prefs.get("refreshToken", null)); }
+    public static String getUsername()     { return username != null ? username : (username = prefs.get("username", null)); }
     public static void clearTokens() {
-        accessToken = null;
-        refreshToken = null;
-        username = null;
-        prefs.remove("accessToken");
-        prefs.remove("refreshToken");
-        prefs.remove("username");
+        accessToken = null; refreshToken = null; username = null;
+        prefs.remove("accessToken"); prefs.remove("refreshToken"); prefs.remove("username");
     }
+    public static boolean hasSession() { return getAccessToken() != null && getRefreshToken() != null; }
 
-    public static boolean hasSession() {
-        return getAccessToken() != null && getRefreshToken() != null;
-    }
-
-    // what view
-    public static void setStage(Stage stage) { AppState.stage = stage; }
+    public static void setStage(Stage s) { stage = s; }
     public static Stage getStage() { return stage; }
 
+    // ── Navigation ──────────────────────────────────────────────────────────
+
     public static void navigateTo(String view) {
-        boolean wasMaximized = stage.isMaximized();
-        double width = stage.getWidth();
-        double height = stage.getHeight();
+        double stageW = stage.getWidth();
+        double stageH = stage.getHeight();
+        boolean wasMax = stage.isMaximized();
 
-        switch (view) {
-            case "login" -> {
-                loginScene = new loginView().buildScene(); // always rebuild login
-                stage.setScene(loginScene);
-            }
-            case "signup" -> {
-                if (signupScene == null) signupScene = new signupView().buildScene();
-                stage.setScene(signupScene);
-            }
-            case "app" -> {
-                appScene = new appView().buildScene(); // always rebuild app to refresh file list
-                stage.setScene(appScene);
-            }
+        Scene current = stage.getScene();
+        if (current != null
+                && current.getRoot() instanceof HBox currentRoot
+                && currentRoot.getChildren().size() >= 2
+                && (view.equals("login") || view.equals("signup"))) {
+
+            // Slide out: panels fly apart using the *current* root width (already laid out)
+            double half = currentRoot.getWidth() / 2.0;
+            slideOut(currentRoot, half, () -> buildAndSlideIn(view, stageW, stageH, wasMax));
+
+        } else {
+            buildAndSlideIn(view, stageW, stageH, wasMax);
         }
+    }
 
+    /** Panels fly apart — left exits left, right exits right. */
+    private static void slideOut(HBox root, double half, Runnable onDone) {
+        Region L = (Region) root.getChildren().get(0);
+        Region R = (Region) root.getChildren().get(1);
+        Interpolator ease = Interpolator.SPLINE(0.4, 0.0, 0.6, 1.0);
+
+        Timeline t = new Timeline(
+                new KeyFrame(Duration.ZERO,
+                        new KeyValue(L.translateXProperty(),  0,     ease),
+                        new KeyValue(R.translateXProperty(),  0,     ease),
+                        new KeyValue(L.opacityProperty(),     1.0,   ease),
+                        new KeyValue(R.opacityProperty(),     1.0,   ease)),
+                new KeyFrame(Duration.millis(200),
+                        new KeyValue(L.translateXProperty(),  -half, ease),
+                        new KeyValue(R.translateXProperty(),   half, ease),
+                        new KeyValue(L.opacityProperty(),      0.0,  ease),
+                        new KeyValue(R.opacityProperty(),       0.0, ease))
+        );
+        t.setOnFinished(e -> { L.setTranslateX(0); R.setTranslateX(0); onDone.run(); });
+        t.play();
+    }
+
+    /** Panels fly together — left enters from left, right enters from right. */
+    private static void slideIn(HBox root, double half) {
+        Region L = (Region) root.getChildren().get(0);
+        Region R = (Region) root.getChildren().get(1);
+        Interpolator ease = Interpolator.SPLINE(0.4, 0.0, 0.6, 1.0);
+
+        // position off-screen before first frame
+        L.setTranslateX(-half);
+        R.setTranslateX( half);
+        L.setOpacity(0.0);
+        R.setOpacity(0.0);
+
+        Timeline t = new Timeline(
+                new KeyFrame(Duration.ZERO,
+                        new KeyValue(L.translateXProperty(), -half, ease),
+                        new KeyValue(R.translateXProperty(),  half, ease),
+                        new KeyValue(L.opacityProperty(),     0.0,  ease),
+                        new KeyValue(R.opacityProperty(),     0.0,  ease)),
+                new KeyFrame(Duration.millis(260),
+                        new KeyValue(L.translateXProperty(),  0,    ease),
+                        new KeyValue(R.translateXProperty(),  0,    ease),
+                        new KeyValue(L.opacityProperty(),     1.0,  ease),
+                        new KeyValue(R.opacityProperty(),     1.0,  ease))
+        );
+        t.play();
+    }
+
+    private static void buildAndSlideIn(String view, double stageW, double stageH, boolean wasMax) {
+        Scene next = switch (view) {
+            case "login"  -> new loginView().buildScene();
+            case "signup" -> new signupView().buildScene();
+            case "app"    -> new appView().buildScene();
+            default       -> null;
+        };
+        if (next == null) return;
+
+        stage.setScene(next);
         stage.show();
 
+        // Restore size first, then wait one extra pulse for layout to finish,
+        // then read the actual root width for a pixel-perfect slide.
         Platform.runLater(() -> {
-            if (wasMaximized) {
-                stage.setMaximized(true);
-            } else {
-                stage.setWidth(width);
-                stage.setHeight(height);
-            }
+            if (wasMax) stage.setMaximized(true);
+            else { stage.setWidth(stageW); stage.setHeight(stageH); }
+
+            // Second pulse: layout is now complete, root.getWidth() is valid
+            Platform.runLater(() -> {
+                Scene s = stage.getScene();
+                if (s == null) return;
+
+                if (s.getRoot() instanceof HBox newRoot && newRoot.getChildren().size() >= 2) {
+                    double half = newRoot.getWidth() / 2.0;
+                    slideIn(newRoot, half);
+                } else if (s.getRoot() != null) {
+                    s.getRoot().setOpacity(0.0);
+                    new Timeline(
+                            new KeyFrame(Duration.ZERO,        new KeyValue(s.getRoot().opacityProperty(), 0.0)),
+                            new KeyFrame(Duration.millis(260), new KeyValue(s.getRoot().opacityProperty(), 1.0))
+                    ).play();
+                }
+            });
         });
     }
 
-    // mobile or desktop
-    private static final boolean isMobile = com.gluonhq.attach.util.Platform.isAndroid()
-            || com.gluonhq.attach.util.Platform.isIOS();
+    // ── Misc ─────────────────────────────────────────────────────────────────
+
+    private static final boolean isMobile =
+            com.gluonhq.attach.util.Platform.isAndroid() || com.gluonhq.attach.util.Platform.isIOS();
 
     public static boolean isMobile() { return isMobile; }
 
     public static void applyStylesheets(Scene scene, String desktopCss) {
         if (!scene.getStylesheets().isEmpty()) return;
-
-        String viewCss = isMobile ? desktopCss.replace(".css", "-mobile.css") : desktopCss;
-        System.out.println("=== isMobile: " + isMobile + " | css: " + viewCss + " ===");
-
-        scene.getStylesheets().add(
-                Objects.requireNonNull(
-                        AppState.class.getResource("/org/miracloud/frontend/main.css")
-                ).toExternalForm()
-        );
-        scene.getStylesheets().add(
-                Objects.requireNonNull(
-                        AppState.class.getResource("/org/miracloud/frontend/" + viewCss)
-                ).toExternalForm()
-        );
+        String css = isMobile ? desktopCss.replace(".css", "-mobile.css") : desktopCss;
+        System.out.println("=== isMobile: " + isMobile + " | css: " + css + " ===");
+        scene.getStylesheets().add(Objects.requireNonNull(
+                AppState.class.getResource("/org/miracloud/frontend/main.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(
+                AppState.class.getResource("/org/miracloud/frontend/" + css)).toExternalForm());
     }
 }

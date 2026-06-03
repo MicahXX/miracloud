@@ -4,82 +4,111 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
-import javafx.stage.Stage;
 import org.miracloud.frontend.AppState;
 import org.miracloud.frontend.controller.loginController;
 
 public class loginView {
 
     public Scene buildScene() {
-        try{
-        Stage stage = AppState.getStage();
-        loginController controller = new loginController();
+        try {
+            loginController controller = new loginController();
 
+            // email input
+            Label emailLabel = new Label("EMAIL");
+            TextField emailInputField = new TextField();
+            emailInputField.setPromptText("you@example.com");
+            VBox emailInput = new VBox(4, emailLabel, emailInputField);
 
-        /*this goes in the Vertical Box*/
-        // email input
-        TextField emailInputField = new TextField("");
-        Label emailLabel = new Label("Enter Email:");
-        HBox emailInput = new HBox(12, emailLabel, emailInputField);
-        emailInput.setAlignment(Pos.CENTER);
-        //password input
-        PasswordField passwordInputField = new PasswordField();
-        Label passwordLabel = new Label("Enter Password:");
-        HBox passwordInput = new HBox(12, passwordLabel, passwordInputField);
-        passwordInput.setAlignment(Pos.CENTER);
-        // Button
-        Button loginButton = new Button("Login");
-        // If you already have an acc, button to signup
-        Label alreadyHaveAnAccLabel = new Label("Dont have an account?");
-        Button toSignup = new Button("Signup");
-        HBox alreadyHaveAnAcc = new HBox(6, alreadyHaveAnAccLabel, toSignup);
-        alreadyHaveAnAcc.setAlignment(Pos.CENTER);
-        // errors, like didn't fill smth in, acc already exists
-        Label errors = new Label("");
+            // password input
+            Label passwordLabel = new Label("PASSWORD");
+            PasswordField passwordInputField = new PasswordField();
+            passwordInputField.setPromptText("••••••••");
+            VBox passwordInput = new VBox(4, passwordLabel, passwordInputField);
 
-        loginButton.setOnAction(e -> {
-            String result = controller.handleLogin(
-                    emailInputField.getText(),
-                    passwordInputField.getText()
-            );
-            errors.setText(result);
-        });
+            // forgot password
+            Button forgotButton = new Button("Forgot password?");
+            HBox forgotRow = new HBox(forgotButton);
+            forgotRow.setAlignment(Pos.CENTER_RIGHT);
 
-        /*Vertical Box, goes in the center of the screen (the borderpane)*/
-        VBox vBox = new VBox(16, emailInput, passwordInput, loginButton, alreadyHaveAnAcc, errors);
-        vBox.setAlignment(Pos.CENTER);
+            // sign in button
+            Button loginButton = new Button("Sign in");
 
-        BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(vBox);
+            // errors
+            Label errors = new Label("");
+            errors.setWrapText(true);
 
-        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-        Scene scene = new Scene(borderPane, bounds.getWidth(), bounds.getHeight());
+            // form panel — right side
+            VBox formPanel = new VBox(20, emailInput, passwordInput, forgotRow, loginButton, errors);
+            formPanel.getStyleClass().add("form-panel");
+            formPanel.setAlignment(Pos.CENTER);
+            HBox.setHgrow(formPanel, Priority.ALWAYS);
 
-        /* CSS */
-        borderPane.getStyleClass().add("border-pane");
-        vBox.getStyleClass().add("vbox");
-        toSignup.getStyleClass().add("toSignup");
-        emailLabel.getStyleClass().add("input-label");
-        passwordLabel.getStyleClass().add("input-label");
-        emailInput.getStyleClass().add("input-row");
-        passwordInput.getStyleClass().add("input-row");
-        loginButton.getStyleClass().add("login-button");
+            // accent panel — left side
+            Label logo = new Label("\u2601 MiraCloud");
 
-        AppState.applyStylesheets(scene, "login.css");
+            Label tagline = new Label("Your files, everywhere you need them.");
+            tagline.setWrapText(true);
+            tagline.setAlignment(Pos.CENTER);
+            Button accentCta = new Button("Sign up");
+            VBox centerContent = new VBox(16, tagline, accentCta);
+            centerContent.setAlignment(Pos.CENTER);
 
-        toSignup.setOnAction(e -> controller.toSignup());
+            Circle dot1 = new Circle(3);
+            Circle dot2 = new Circle(3);
+            HBox dots = new HBox(6, dot1, dot2);
+            dots.setAlignment(Pos.CENTER);
 
-        return scene;
-    } catch (Exception e) {
-        // show error on screen instead of crashing
-        Label errorLabel = new Label(e.getMessage());
-        Scene scene = new Scene(new VBox(errorLabel), 400, 300);
-        AppState.getStage().setScene(scene);
-        AppState.getStage().show();
+            Region topSpacer = new Region();
+            Region bottomSpacer = new Region();
+            VBox.setVgrow(topSpacer, Priority.ALWAYS);
+            VBox.setVgrow(bottomSpacer, Priority.ALWAYS);
+
+            VBox accentPanel = new VBox(logo, topSpacer, centerContent, bottomSpacer, dots);
+            accentPanel.setAlignment(Pos.CENTER);
+            HBox.setHgrow(accentPanel, Priority.ALWAYS);
+
+            // root
+            HBox root = new HBox(accentPanel, formPanel);
+            Rectangle clip = new Rectangle();
+            clip.widthProperty().bind(root.widthProperty());
+            clip.heightProperty().bind(root.heightProperty());
+            root.setClip(clip);
+
+            Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+            Scene scene = new Scene(root, bounds.getWidth(), bounds.getHeight());
+
+            // CSS
+            errors.getStyleClass().add("error-label");
+            emailLabel.getStyleClass().add("field-label");
+            passwordLabel.getStyleClass().add("field-label");
+            forgotButton.getStyleClass().add("forgot-link");
+            loginButton.getStyleClass().add("submit-button");
+            logo.getStyleClass().add("accent-logo");
+            tagline.getStyleClass().add("accent-tagline");
+            accentCta.getStyleClass().add("accent-cta");
+            dot1.getStyleClass().add("dot-active");
+            dot2.getStyleClass().add("dot");
+            accentPanel.getStyleClass().add("accent-panel");
+            root.getStyleClass().add("auth-root");
+
+            AppState.applyStylesheets(scene, "login.css");
+
+            // handlers
+            loginButton.setOnAction(e -> errors.setText(
+                    controller.handleLogin(emailInputField.getText(), passwordInputField.getText())));
+            accentCta.setOnAction(e -> controller.toSignup());
+
+            return scene;
+
+        } catch (Exception e) {
+            Label err = new Label(e.getMessage());
+            Scene scene = new Scene(new VBox(err), 400, 300);
+            AppState.getStage().setScene(scene);
+            AppState.getStage().show();
             return null;
         }
     }
