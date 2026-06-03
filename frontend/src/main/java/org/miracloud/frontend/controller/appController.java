@@ -38,9 +38,9 @@ public class appController {
         JsonNode root = mapper.readTree(response.body());
         List<FileEntry> entries = new ArrayList<>();
         for (JsonNode node : root) {
-            String name     = node.has("name")       ? node.get("name").asText()       : node.asText();
-            long size        = node.has("sizeBytes")  ? node.get("sizeBytes").asLong()  : 0L;
-            String date      = node.has("uploadedAt") ? node.get("uploadedAt").asText() : "—";
+            String name  = node.has("name")       ? node.get("name").asText()       : node.asText();
+            long size    = node.has("sizeBytes")   ? node.get("sizeBytes").asLong()  : 0L;
+            String date  = node.has("uploadedAt")  ? node.get("uploadedAt").asText() : "—";
             entries.add(new FileEntry(name, size, date));
         }
         return entries;
@@ -55,12 +55,20 @@ public class appController {
         byte[] fileBytes = Files.readAllBytes(filePath);
         String fileName = filePath.getFileName().toString();
 
+        String mimeType = detectMimeType(filePath);
+
+        // Raw filename in Content-Disposition (servers parse this more reliably)
         String multipartHeader = "--" + boundary + "\r\n" +
                 "Content-Disposition: form-data; name=\"file\"; filename=\"" + fileName + "\"\r\n" +
-                "Content-Type: application/octet-stream\r\n\r\n";
+                "Content-Type: " + mimeType + "\r\n\r\n";
 
-        byte[] prefix  = multipartHeader.getBytes();
-        byte[] suffix  = ("\r\n--" + boundary + "--\r\n").getBytes();
+        // Encoded filename only for the URL path
+        String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8)
+                .replace("+", "%20");
+
+        // Always use explicit UTF-8 for boundary strings
+        byte[] prefix   = multipartHeader.getBytes(StandardCharsets.UTF_8);
+        byte[] suffix   = ("\r\n--" + boundary + "--\r\n").getBytes(StandardCharsets.UTF_8);
         byte[] fullBody = new byte[prefix.length + fileBytes.length + suffix.length];
         System.arraycopy(prefix,    0, fullBody, 0,                                prefix.length);
         System.arraycopy(fileBytes, 0, fullBody, prefix.length,                    fileBytes.length);
@@ -169,6 +177,41 @@ public class appController {
             client.send(request, HttpResponse.BodyHandlers.ofString());
         }
         AppState.clearTokens();
+    }
+
+    private static String detectMimeType(Path filePath) {
+        String name = filePath.getFileName().toString().toLowerCase();
+        if (name.endsWith(".jpg") || name.endsWith(".jpeg")) return "image/jpeg";
+        if (name.endsWith(".png"))  return "image/png";
+        if (name.endsWith(".gif"))  return "image/gif";
+        if (name.endsWith(".webp")) return "image/webp";
+        if (name.endsWith(".pdf"))  return "application/pdf";
+        if (name.endsWith(".zip"))  return "application/zip";
+        if (name.endsWith(".tar"))  return "application/x-tar";
+        if (name.endsWith(".gz"))   return "application/gzip";
+        if (name.endsWith(".mp4"))  return "video/mp4";
+        if (name.endsWith(".mkv"))  return "video/x-matroska";
+        if (name.endsWith(".mp3"))  return "audio/mpeg";
+        if (name.endsWith(".wav"))  return "audio/wav";
+        if (name.endsWith(".txt"))  return "text/plain";
+        if (name.endsWith(".html") || name.endsWith(".htm")) return "text/html";
+        if (name.endsWith(".json")) return "application/json";
+        if (name.endsWith(".xml"))  return "application/xml";
+        if (name.endsWith(".csv"))  return "text/csv";
+        if (name.endsWith(".xlsx")) return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        if (name.endsWith(".xls"))  return "application/vnd.ms-excel";
+        if (name.endsWith(".docx")) return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        if (name.endsWith(".doc"))  return "application/msword";
+        if (name.endsWith(".pptx")) return "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+        if (name.endsWith(".ppt"))  return "application/vnd.ms-powerpoint";
+
+        // Fall back to OS probe, then generic binary
+        try {
+            String probed = Files.probeContentType(filePath);
+            if (probed != null) return probed;
+        } catch (Exception ignored) {}
+
+        return "application/octet-stream";
     }
 
     private HttpResponse<String> authorizedGet(String url) throws Exception {
