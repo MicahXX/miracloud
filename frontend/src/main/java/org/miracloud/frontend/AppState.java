@@ -42,8 +42,6 @@ public class AppState {
     public static void setStage(Stage s) { stage = s; }
     public static Stage getStage() { return stage; }
 
-    // ── Navigation ──────────────────────────────────────────────────────────
-
     public static void navigateTo(String view) {
         double stageW = stage.getWidth();
         double stageH = stage.getHeight();
@@ -64,7 +62,6 @@ public class AppState {
         }
     }
 
-    /** Panels fly apart — left exits left, right exits right. */
     private static void slideOut(HBox root, double half, Runnable onDone) {
         Region L = (Region) root.getChildren().get(0);
         Region R = (Region) root.getChildren().get(1);
@@ -86,13 +83,11 @@ public class AppState {
         t.play();
     }
 
-    /** Panels fly together — left enters from left, right enters from right. */
     private static void slideIn(HBox root, double half) {
         Region L = (Region) root.getChildren().get(0);
         Region R = (Region) root.getChildren().get(1);
         Interpolator ease = Interpolator.SPLINE(0.4, 0.0, 0.6, 1.0);
 
-        // position off-screen before first frame
         L.setTranslateX(-half);
         R.setTranslateX( half);
         L.setOpacity(0.0);
@@ -125,13 +120,10 @@ public class AppState {
         stage.setScene(next);
         stage.show();
 
-        // Restore size first, then wait one extra pulse for layout to finish,
-        // then read the actual root width for a pixel-perfect slide.
         Platform.runLater(() -> {
             if (wasMax) stage.setMaximized(true);
             else { stage.setWidth(stageW); stage.setHeight(stageH); }
 
-            // Second pulse: layout is now complete, root.getWidth() is valid
             Platform.runLater(() -> {
                 Scene s = stage.getScene();
                 if (s == null) return;
@@ -149,8 +141,6 @@ public class AppState {
             });
         });
     }
-
-    // ── Misc ─────────────────────────────────────────────────────────────────
 
     private static final boolean isMobile =
             com.gluonhq.attach.util.Platform.isAndroid() || com.gluonhq.attach.util.Platform.isIOS();

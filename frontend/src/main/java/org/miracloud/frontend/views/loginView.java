@@ -29,10 +29,6 @@ public class loginView {
             passwordInputField.setPromptText("••••••••");
             VBox passwordInput = new VBox(4, passwordLabel, passwordInputField);
 
-            // forgot password
-            Button forgotButton = new Button("Forgot password?");
-            HBox forgotRow = new HBox(forgotButton);
-            forgotRow.setAlignment(Pos.CENTER_RIGHT);
 
             // sign in button
             Button loginButton = new Button("Sign in");
@@ -42,7 +38,7 @@ public class loginView {
             errors.setWrapText(true);
 
             // form panel — right side
-            VBox formPanel = new VBox(20, emailInput, passwordInput, forgotRow, loginButton, errors);
+            VBox formPanel = new VBox(20, emailInput, passwordInput, loginButton, errors);
             formPanel.getStyleClass().add("form-panel");
             formPanel.setAlignment(Pos.CENTER);
             HBox.setHgrow(formPanel, Priority.ALWAYS);
@@ -85,7 +81,6 @@ public class loginView {
             errors.getStyleClass().add("error-label");
             emailLabel.getStyleClass().add("field-label");
             passwordLabel.getStyleClass().add("field-label");
-            forgotButton.getStyleClass().add("forgot-link");
             loginButton.getStyleClass().add("submit-button");
             logo.getStyleClass().add("accent-logo");
             tagline.getStyleClass().add("accent-tagline");
