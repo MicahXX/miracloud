@@ -143,7 +143,8 @@ public class AppState {
     }
 
     private static final boolean isMobile =
-            com.gluonhq.attach.util.Platform.isAndroid() || com.gluonhq.attach.util.Platform.isIOS();
+            System.getProperty("javafx.platform", "").equalsIgnoreCase("android") ||
+            System.getProperty("javafx.platform", "").equalsIgnoreCase("ios");
 
     public static boolean isMobile() { return isMobile; }
 

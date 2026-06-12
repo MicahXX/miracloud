@@ -1,5 +1,6 @@
 package org.miracloud.frontend.views;
 
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -20,46 +21,36 @@ public class signupView {
         try {
             signupController controller = new signupController();
 
-            // username
             Label usernameLabel = new Label("USERNAME");
             TextField usernameInputField = new TextField();
             usernameInputField.setPromptText("Your name");
             VBox usernameInput = new VBox(4, usernameLabel, usernameInputField);
 
-            // email
             Label emailLabel = new Label("EMAIL");
             TextField emailInputField = new TextField();
             emailInputField.setPromptText("you@example.com");
             VBox emailInput = new VBox(4, emailLabel, emailInputField);
 
-            // password
             Label passwordLabel = new Label("PASSWORD");
             PasswordField passwordInputField = new PasswordField();
             passwordInputField.setPromptText("••••••••");
             VBox passwordInput = new VBox(4, passwordLabel, passwordInputField);
 
-            // privacy checkbox
             CheckBox privacyCheckbox = new CheckBox();
             Label privacyLabel = new Label("Agree to our privacy policy and our cookies");
             HBox privacyRow = new HBox(8, privacyCheckbox, privacyLabel);
             privacyRow.setAlignment(Pos.CENTER_LEFT);
 
-            // create account button
             Button signupButton = new Button("Create account");
-
-            // errors
             Label errors = new Label("");
             errors.setWrapText(true);
 
-            // form panel — left side
             VBox formPanel = new VBox(18, usernameInput, emailInput, passwordInput, privacyRow, signupButton, errors);
             formPanel.getStyleClass().add("form-panel");
             formPanel.setAlignment(Pos.CENTER);
             HBox.setHgrow(formPanel, Priority.ALWAYS);
 
-            // accent panel — right side
             Label logo = new Label("\u2601 MiraCloud");
-
             Label tagline = new Label("Already have an account? Jump back in.");
             tagline.setWrapText(true);
             tagline.setAlignment(Pos.CENTER);
@@ -81,7 +72,6 @@ public class signupView {
             accentPanel.setAlignment(Pos.CENTER);
             HBox.setHgrow(accentPanel, Priority.ALWAYS);
 
-            // root
             HBox root = new HBox(formPanel, accentPanel);
             Rectangle clip = new Rectangle();
             clip.widthProperty().bind(root.widthProperty());
@@ -91,7 +81,6 @@ public class signupView {
             Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
             Scene scene = new Scene(root, bounds.getWidth(), bounds.getHeight());
 
-            // CSS
             errors.getStyleClass().add("error-label");
             usernameLabel.getStyleClass().add("field-label");
             emailLabel.getStyleClass().add("field-label");
@@ -109,10 +98,21 @@ public class signupView {
 
             AppState.applyStylesheets(scene, "signup.css");
 
-            // handlers
-            signupButton.setOnAction(e -> errors.setText(
-                    controller.handleSignup(emailInputField.getText(), usernameInputField.getText(),
-                            passwordInputField.getText(), privacyCheckbox.isSelected())));
+            signupButton.setOnAction(e -> {
+                signupButton.setDisable(true);
+                errors.setText("Creating account...");
+                new Thread(() -> {
+                    String result = controller.handleSignup(
+                            emailInputField.getText(),
+                            usernameInputField.getText(),
+                            passwordInputField.getText(),
+                            privacyCheckbox.isSelected());
+                    Platform.runLater(() -> {
+                        signupButton.setDisable(false);
+                        errors.setText(result);
+                    });
+                }).start();
+            });
             accentCta.setOnAction(e -> controller.toLogin());
 
             return scene;

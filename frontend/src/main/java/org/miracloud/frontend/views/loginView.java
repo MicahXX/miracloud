@@ -1,5 +1,6 @@
 package org.miracloud.frontend.views;
 
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -17,35 +18,26 @@ public class loginView {
         try {
             loginController controller = new loginController();
 
-            // email input
             Label emailLabel = new Label("EMAIL");
             TextField emailInputField = new TextField();
             emailInputField.setPromptText("you@example.com");
             VBox emailInput = new VBox(4, emailLabel, emailInputField);
 
-            // password input
             Label passwordLabel = new Label("PASSWORD");
             PasswordField passwordInputField = new PasswordField();
             passwordInputField.setPromptText("••••••••");
             VBox passwordInput = new VBox(4, passwordLabel, passwordInputField);
 
-
-            // sign in button
             Button loginButton = new Button("Sign in");
-
-            // errors
             Label errors = new Label("");
             errors.setWrapText(true);
 
-            // form panel — right side
             VBox formPanel = new VBox(20, emailInput, passwordInput, loginButton, errors);
             formPanel.getStyleClass().add("form-panel");
             formPanel.setAlignment(Pos.CENTER);
             HBox.setHgrow(formPanel, Priority.ALWAYS);
 
-            // accent panel — left side
             Label logo = new Label("\u2601 MiraCloud");
-
             Label tagline = new Label("Your files, everywhere you need them.");
             tagline.setWrapText(true);
             tagline.setAlignment(Pos.CENTER);
@@ -67,7 +59,6 @@ public class loginView {
             accentPanel.setAlignment(Pos.CENTER);
             HBox.setHgrow(accentPanel, Priority.ALWAYS);
 
-            // root
             HBox root = new HBox(accentPanel, formPanel);
             Rectangle clip = new Rectangle();
             clip.widthProperty().bind(root.widthProperty());
@@ -77,7 +68,6 @@ public class loginView {
             Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
             Scene scene = new Scene(root, bounds.getWidth(), bounds.getHeight());
 
-            // CSS
             errors.getStyleClass().add("error-label");
             emailLabel.getStyleClass().add("field-label");
             passwordLabel.getStyleClass().add("field-label");
@@ -92,9 +82,17 @@ public class loginView {
 
             AppState.applyStylesheets(scene, "login.css");
 
-            // handlers
-            loginButton.setOnAction(e -> errors.setText(
-                    controller.handleLogin(emailInputField.getText(), passwordInputField.getText())));
+            loginButton.setOnAction(e -> {
+                loginButton.setDisable(true);
+                errors.setText("Signing in...");
+                new Thread(() -> {
+                    String result = controller.handleLogin(emailInputField.getText(), passwordInputField.getText());
+                    Platform.runLater(() -> {
+                        loginButton.setDisable(false);
+                        errors.setText(result);
+                    });
+                }).start();
+            });
             accentCta.setOnAction(e -> controller.toSignup());
 
             return scene;

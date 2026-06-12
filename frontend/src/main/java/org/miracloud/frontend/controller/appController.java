@@ -17,7 +17,7 @@ import java.util.List;
 
 public class appController {
 
-    private static final String BASE_URL = "http://localhost:8085/api/files";
+    private static final String BASE_URL = "https://miracloud-api.rafilaos.vip/api/files";
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public List<FileEntry> listFiles() throws Exception {
