@@ -1,13 +1,12 @@
 /* colors */
 
 .root {
-
-    -fx-primary: #f43b9e;
-    -fx-secondary: #f472b6;
-    -fx-background: #1c1b2e;
-    -fx-surface: #27263d;
-    -fx-text: #ede9fe;
-    -fx-text-muted: #6b6a8a;
+    -fx-primary: #0ea5e9;
+    -fx-secondary: #38bdf8;
+    -fx-background: #0b1a2e;
+    -fx-surface: #112236;
+    -fx-text: #e0f2fe;
+    -fx-text-muted: #4a6a8a;
 }
 
 .border-pane {

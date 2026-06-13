@@ -1,16 +1,14 @@
 package org.miracloud.frontend.views;
 
-//javafx import
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
-import javafx.stage.Stage;
-
 import org.miracloud.frontend.AppState;
 import org.miracloud.frontend.controller.signupController;
 
@@ -20,96 +18,111 @@ import java.io.StringWriter;
 public class signupView {
 
     public Scene buildScene() {
-        try{
-        Stage stage = AppState.getStage();
-        signupController controller = new signupController();
+        try {
+            signupController controller = new signupController();
 
-        /*this goes in the Vertical Box*/
-        // user input
-        TextField usernameInputField = new TextField("");
-        Label usernameLabel = new Label("Enter Username:");
-        HBox usernameInput = new HBox(usernameLabel, usernameInputField);
-        usernameInput.setAlignment(Pos.CENTER);
+            Label usernameLabel = new Label("USERNAME");
+            TextField usernameInputField = new TextField();
+            usernameInputField.setPromptText("Your name");
+            VBox usernameInput = new VBox(4, usernameLabel, usernameInputField);
 
-        // email input
-        TextField emailInputField = new TextField("");
-        Label emailLabel = new Label("Enter Email:");
-        HBox emailInput = new HBox(emailLabel, emailInputField);
-        emailInput.setAlignment(Pos.CENTER);
+            Label emailLabel = new Label("EMAIL");
+            TextField emailInputField = new TextField();
+            emailInputField.setPromptText("you@example.com");
+            VBox emailInput = new VBox(4, emailLabel, emailInputField);
 
-        //password input
-        PasswordField passwordInputField = new PasswordField();
-        Label passwordLabel = new Label("Enter Password:");
-        HBox passwordInput = new HBox(passwordLabel, passwordInputField);
-        passwordInput.setAlignment(Pos.CENTER);
+            Label passwordLabel = new Label("PASSWORD");
+            PasswordField passwordInputField = new PasswordField();
+            passwordInputField.setPromptText("••••••••");
+            VBox passwordInput = new VBox(4, passwordLabel, passwordInputField);
 
-        // Button
-        Button signupButton = new Button("Sign Up");
-        // you have to accept privacy policy and cookies with easy checkbox
-        Label privacyPolicyAndCookiesLabel = new Label("Agree to our privacy policy and our cookies");
-        CheckBox privacyPolicyAndCookiesCheckbox = new CheckBox();
-        HBox privacyPolicyAndCookiesInput = new HBox(privacyPolicyAndCookiesLabel, privacyPolicyAndCookiesCheckbox);
-        privacyPolicyAndCookiesInput.setAlignment(Pos.CENTER);
+            CheckBox privacyCheckbox = new CheckBox();
+            Label privacyLabel = new Label("Agree to our privacy policy and our cookies");
+            HBox privacyRow = new HBox(8, privacyCheckbox, privacyLabel);
+            privacyRow.setAlignment(Pos.CENTER_LEFT);
 
-        // If you already have an acc, button to login
-        Label alreadyHaveAnAccLabel = new Label("Already have an account?");
-        Button toLogin = new Button("Login");
-        HBox alreadyHaveAnAcc = new HBox(alreadyHaveAnAccLabel, toLogin);
-        alreadyHaveAnAcc.setAlignment(Pos.CENTER);
-        // errors, like didn't fill smth in, acc already exists
-        Label errors = new Label("");
+            Button signupButton = new Button("Create account");
+            Label errors = new Label("");
+            errors.setWrapText(true);
 
+            VBox formPanel = new VBox(18, usernameInput, emailInput, passwordInput, privacyRow, signupButton, errors);
+            formPanel.getStyleClass().add("form-panel");
+            formPanel.setAlignment(Pos.CENTER);
+            HBox.setHgrow(formPanel, Priority.ALWAYS);
 
-        /*Vertical Box, goes in the center of the screen (the borderpane)*/
-        VBox vBox = new VBox(usernameInput, emailInput, passwordInput, privacyPolicyAndCookiesInput, signupButton, alreadyHaveAnAcc, errors);
-        vBox.setAlignment(Pos.CENTER);
+            Label logo = new Label("\u2601 MiraCloud");
+            Label tagline = new Label("Already have an account? Jump back in.");
+            tagline.setWrapText(true);
+            tagline.setAlignment(Pos.CENTER);
+            Button accentCta = new Button("Sign in");
+            VBox centerContent = new VBox(16, tagline, accentCta);
+            centerContent.setAlignment(Pos.CENTER);
 
-        BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(vBox);
+            Circle dot1 = new Circle(3);
+            Circle dot2 = new Circle(3);
+            HBox dots = new HBox(6, dot1, dot2);
+            dots.setAlignment(Pos.CENTER);
 
-        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-        Scene scene = new Scene(borderPane, bounds.getWidth(), bounds.getHeight());
+            Region topSpacer = new Region();
+            Region bottomSpacer = new Region();
+            VBox.setVgrow(topSpacer, Priority.ALWAYS);
+            VBox.setVgrow(bottomSpacer, Priority.ALWAYS);
 
-        /* CSS */
-        privacyPolicyAndCookiesCheckbox.getStyleClass().add("privacyCheckbox");
-        alreadyHaveAnAccLabel.getStyleClass().add("alreadyHaveAnAcLabel");
-        toLogin.getStyleClass().add("toLogin");
-        borderPane.getStyleClass().add("border-pane");
-        vBox.getStyleClass().add("vbox");
-        signupButton.getStyleClass().add("signup-button");
-        usernameLabel.getStyleClass().add("input-label");
-        emailLabel.getStyleClass().add("input-label");
-        passwordLabel.getStyleClass().add("input-label");
-        usernameInput.getStyleClass().add("input-row");
-        emailInput.getStyleClass().add("input-row");
-        passwordInput.getStyleClass().add("input-row");
+            VBox accentPanel = new VBox(logo, topSpacer, centerContent, bottomSpacer, dots);
+            accentPanel.setAlignment(Pos.CENTER);
+            HBox.setHgrow(accentPanel, Priority.ALWAYS);
 
+            HBox root = new HBox(formPanel, accentPanel);
+            Rectangle clip = new Rectangle();
+            clip.widthProperty().bind(root.widthProperty());
+            clip.heightProperty().bind(root.heightProperty());
+            root.setClip(clip);
 
-        AppState.applyStylesheets(scene, "signup.css");  // AppState picks mobile or desktop
+            Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+            Scene scene = new Scene(root, bounds.getWidth(), bounds.getHeight());
 
+            errors.getStyleClass().add("error-label");
+            usernameLabel.getStyleClass().add("field-label");
+            emailLabel.getStyleClass().add("field-label");
+            passwordLabel.getStyleClass().add("field-label");
+            privacyLabel.getStyleClass().add("footer-label");
+            privacyCheckbox.getStyleClass().add("privacy-checkbox");
+            signupButton.getStyleClass().add("submit-button");
+            logo.getStyleClass().add("accent-logo");
+            tagline.getStyleClass().add("accent-tagline");
+            accentCta.getStyleClass().add("accent-cta");
+            dot1.getStyleClass().add("dot");
+            dot2.getStyleClass().add("dot-active");
+            accentPanel.getStyleClass().add("accent-panel");
+            root.getStyleClass().add("auth-root");
 
-        signupButton.setOnAction(e -> {
-            String returnString = controller.handleSignup(
-                    emailInputField.getText(),
-                    usernameInputField.getText(),
-                    passwordInputField.getText(),
-                    privacyPolicyAndCookiesCheckbox.isSelected()
-            );
-            errors.setText(returnString);
-        });
+            AppState.applyStylesheets(scene, "signup.css");
 
-        toLogin.setOnAction(e -> controller.toLogin());
+            signupButton.setOnAction(e -> {
+                signupButton.setDisable(true);
+                errors.setText("Creating account...");
+                new Thread(() -> {
+                    String result = controller.handleSignup(
+                            emailInputField.getText(),
+                            usernameInputField.getText(),
+                            passwordInputField.getText(),
+                            privacyCheckbox.isSelected());
+                    Platform.runLater(() -> {
+                        signupButton.setDisable(false);
+                        errors.setText(result);
+                    });
+                }).start();
+            });
+            accentCta.setOnAction(e -> controller.toLogin());
 
-        return scene;
+            return scene;
 
         } catch (Exception e) {
             StringWriter sw = new StringWriter();
             e.printStackTrace(new PrintWriter(sw));
-
-            Label errorLabel = new Label(sw.toString());
-            errorLabel.setWrapText(true);
-            ScrollPane scroll = new ScrollPane(errorLabel);
-            Scene scene = new Scene(scroll, 400, 300);
+            Label err = new Label(sw.toString());
+            err.setWrapText(true);
+            Scene scene = new Scene(new ScrollPane(err), 400, 300);
             AppState.getStage().setScene(scene);
             AppState.getStage().show();
             return null;
