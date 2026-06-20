@@ -170,7 +170,7 @@ public class appController {
             String json = String.format("{\"refreshToken\":\"%s\"}", refreshToken);
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8080/api/auth/logout"))
+                    .uri(URI.create("https://miracloud-api.rafilaos.vip/api/auth/logout"))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
