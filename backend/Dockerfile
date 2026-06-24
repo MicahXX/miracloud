@@ -17,7 +17,7 @@ FROM eclipse-temurin:21-jre
 WORKDIR /app
 
 # Create a non-root user to run the app (good practice, avoids running as root in the container)
-RUN useradd -m -u 1000 miracloud
+RUN useradd -m miracloud
 USER miracloud
 
 COPY --from=build /app/target/*.jar app.jar
